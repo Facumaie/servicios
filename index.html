@@ -3,185 +3,246 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Afectación Diaria · DSED/DPEM</title>
+<title>Afectación de Servicios · DSED/DPEM</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.4.0/exceljs.min.js"></script>
 <style>
 :root{
-  --bg:#0d1420; --bg2:#0a0f18; --panel:#16202e; --panel2:#1b2738;
-  --line:#243245; --line2:#2e4055;
-  --ink:#e8eef6; --ink2:#c4d2e4; --muted:#8093a8; --faint:#5a6b80;
-  --accent:#3b82f6; --accent-d:#2563eb; --moto:#f59e0b; --moto-d:#d97706;
-  --good:#22c55e; --good-bg:#0f2a1c; --bad:#ef4444; --bad-bg:#2a1414;
-  --warn:#fbbf24;
+  --bg:#eef2f8; --bg-soft:#e6ecf4;
+  --panel:#ffffff; --panel2:#f6f8fc; --panel3:#eef3fa;
+  --line:#dbe3ee; --line2:#c7d2e2;
+  --ink:#0f1d33; --ink2:#3a4a63; --muted:#6f8298; --faint:#9aa9bf;
+  --accent:#2563eb; --accent-d:#1d4ed8; --accent-soft:#e9f0ff;
+  --moto:#d97706; --moto-d:#b45309; --moto-soft:#fdf0dc;
+  --good:#059669; --good-soft:#e3f6ee; --bad:#dc2626; --bad-soft:#fdeaea; --warn:#d97706;
+  --shadow-sm:0 1px 2px rgba(15,29,51,.05),0 1px 3px rgba(15,29,51,.05);
+  --shadow-md:0 4px 14px rgba(15,29,51,.08);
+  --shadow-lg:0 16px 40px rgba(15,29,51,.16);
 }
 *{box-sizing:border-box;margin:0;padding:0}
-html,body{background:var(--bg);color:var(--ink);font-family:'Inter',system-ui,sans-serif;font-size:14px;-webkit-font-smoothing:antialiased}
-body{min-height:100vh}
+html,body{background:var(--bg);color:var(--ink);font-family:'Barlow',system-ui,sans-serif;font-size:14px;-webkit-font-smoothing:antialiased}
+body{min-height:100vh;background-image:radial-gradient(ellipse 70% 50% at 0% 0%,rgba(37,99,235,.05),transparent 60%)}
 button{font-family:inherit;cursor:pointer}
 input,select{font-family:inherit}
 ::-webkit-scrollbar{width:10px;height:10px}
-::-webkit-scrollbar-track{background:var(--bg2)}
-::-webkit-scrollbar-thumb{background:var(--line2);border-radius:6px}
-::-webkit-scrollbar-thumb:hover{background:#3a506b}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:#c3d0e0;border-radius:6px}
+::-webkit-scrollbar-thumb:hover{background:#a9bad0}
 
-/* ---------- Top bar ---------- */
-.topbar{background:linear-gradient(180deg,#101a28,#0b121d);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:30}
-.topbar-in{max-width:1280px;margin:0 auto;padding:14px 20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+/* Top bar */
+.topbar{background:rgba(255,255,255,.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:30}
+.topbar-in{max-width:1280px;margin:0 auto;padding:13px 22px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
 .brand{display:flex;align-items:center;gap:13px}
-.shield{width:42px;height:42px;border-radius:9px;background:linear-gradient(145deg,#1e3a6e,#16263f);border:1px solid #2c4a78;display:grid;place-items:center;flex-shrink:0;box-shadow:0 2px 10px rgba(0,0,0,.4)}
-.shield svg{width:24px;height:24px}
-.brand h1{font-family:'Oswald';font-weight:600;font-size:19px;letter-spacing:.5px;line-height:1.05;text-transform:uppercase}
-.brand .sub{font-size:11px;color:var(--muted);letter-spacing:2.5px;font-weight:500;text-transform:uppercase;margin-top:2px}
-.conn{margin-left:auto;display:flex;align-items:center;gap:8px;font-size:11.5px;color:var(--muted);font-weight:500}
+.shield{width:42px;height:42px;border-radius:11px;background:linear-gradient(140deg,var(--accent),#0891b2);display:grid;place-items:center;flex-shrink:0;box-shadow:0 6px 16px rgba(37,99,235,.26)}
+.shield svg{width:23px;height:23px;fill:#fff}
+.brand h1{font-family:'Barlow Condensed';font-weight:700;font-size:20px;letter-spacing:.5px;line-height:1;text-transform:uppercase;color:var(--ink)}
+.brand .sub{font-size:11px;color:var(--muted);letter-spacing:2.5px;font-weight:600;text-transform:uppercase;margin-top:3px}
+.conn{margin-left:auto;display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);font-weight:600;background:var(--panel);border:1px solid var(--line);padding:6px 12px;border-radius:20px}
 .dot{width:8px;height:8px;border-radius:50%;background:var(--faint);transition:.3s}
-.dot.on{background:var(--good);box-shadow:0 0 8px var(--good)}
+.dot.on{background:var(--good);box-shadow:0 0 8px rgba(5,150,105,.5)}
 .dot.err{background:var(--bad)}
 
-/* ---------- Tabs ---------- */
-.tabs{max-width:1280px;margin:0 auto;padding:0 20px;display:flex;gap:2px;border-bottom:1px solid var(--line)}
-.tab{background:none;border:none;color:var(--muted);padding:13px 20px;font-family:'Oswald';font-weight:500;font-size:14px;letter-spacing:1.2px;text-transform:uppercase;border-bottom:2px solid transparent;margin-bottom:-1px;transition:.15s}
+.tabs{max-width:1280px;margin:0 auto;padding:0 22px;display:flex;gap:4px;border-bottom:1px solid var(--line)}
+.tab{background:none;border:none;color:var(--muted);padding:13px 20px;font-family:'Barlow Condensed';font-weight:600;font-size:14.5px;letter-spacing:1px;text-transform:uppercase;border-bottom:2.5px solid transparent;margin-bottom:-1px;transition:.15s}
 .tab:hover{color:var(--ink2)}
-.tab.active{color:var(--ink);border-bottom-color:var(--accent)}
+.tab.active{color:var(--accent);border-bottom-color:var(--accent)}
 
-.wrap{max-width:1280px;margin:0 auto;padding:22px 20px 60px}
+.wrap{max-width:1280px;margin:0 auto;padding:22px 22px 60px}
 .view{display:none}
 .view.active{display:block;animation:fade .25s ease}
 @keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
 
-/* ---------- Generic ---------- */
-.row{display:flex;gap:14px;flex-wrap:wrap}
-.panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px}
-.panel-h{font-family:'Oswald';font-weight:600;font-size:13px;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink2);margin-bottom:14px;display:flex;align-items:center;gap:9px}
-.panel-h .pin{width:3px;height:15px;background:var(--accent);border-radius:2px}
-label.lbl{display:block;font-size:11px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
-input.f,select.f{width:100%;background:var(--bg2);border:1px solid var(--line2);border-radius:8px;color:var(--ink);padding:10px 12px;font-size:14px;outline:none;transition:.15s}
-input.f:focus,select.f:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(59,130,246,.15)}
-.btn{background:var(--accent);color:#fff;border:none;border-radius:8px;padding:10px 18px;font-weight:600;font-size:13.5px;letter-spacing:.3px;transition:.15s;display:inline-flex;align-items:center;gap:7px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px;box-shadow:var(--shadow-sm)}
+.panel-h{font-family:'Barlow Condensed';font-weight:700;font-size:14px;letter-spacing:1px;text-transform:uppercase;color:var(--ink);margin-bottom:14px;display:flex;align-items:center;gap:9px}
+.panel-h .pin{width:3px;height:16px;background:var(--accent);border-radius:2px}
+label.lbl{display:block;font-family:'Barlow Condensed';font-size:12px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+input.f,select.f{width:100%;background:var(--panel2);border:1.5px solid var(--line2);border-radius:9px;color:var(--ink);padding:10px 12px;font-size:14px;outline:none;transition:.15s}
+input.f:focus,select.f:focus{border-color:var(--accent);background:#fff;box-shadow:0 0 0 3px rgba(37,99,235,.13)}
+.btn{background:var(--accent);color:#fff;border:none;border-radius:9px;padding:10px 18px;font-weight:600;font-size:13.5px;transition:.15s;display:inline-flex;align-items:center;gap:7px;box-shadow:0 2px 8px rgba(37,99,235,.2)}
 .btn:hover{background:var(--accent-d)}
-.btn:disabled{opacity:.45;cursor:not-allowed}
-.btn.ghost{background:transparent;border:1px solid var(--line2);color:var(--ink2)}
-.btn.ghost:hover{background:var(--panel2);border-color:var(--accent)}
-.btn.amber{background:var(--moto)}.btn.amber:hover{background:var(--moto-d)}
-.btn.danger{background:transparent;border:1px solid var(--bad);color:#ff8585}
-.btn.danger:hover{background:var(--bad-bg)}
+.btn:disabled{opacity:.45;cursor:not-allowed;box-shadow:none}
+.btn.ghost{background:#fff;border:1.5px solid var(--line2);color:var(--ink2);box-shadow:none}
+.btn.ghost:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
+.btn.danger{background:#fff;border:1.5px solid #f0c2c2;color:var(--bad);box-shadow:none}
+.btn.danger:hover{background:var(--bad-soft)}
 .btn.sm{padding:6px 12px;font-size:12px}
-.chip{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600;letter-spacing:.4px}
-.chip.moto{background:rgba(245,158,11,.14);color:var(--moto);border:1px solid rgba(245,158,11,.3)}
-.chip.inf{background:rgba(59,130,246,.13);color:#7eb0ff;border:1px solid rgba(59,130,246,.28)}
+.chip{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:700;letter-spacing:.3px}
+.chip.moto{background:var(--moto-soft);color:var(--moto-d);border:1px solid #f5d39a}
+.chip.inf{background:var(--accent-soft);color:var(--accent-d);border:1px solid #c9dcfb}
 .mono{font-family:'JetBrains Mono',monospace}
 .muted{color:var(--muted)}
 
-/* ---------- Tablero ---------- */
+/* Tablero */
 .board-top{display:flex;gap:14px;align-items:flex-end;flex-wrap:wrap;margin-bottom:20px}
-.date-pick{display:flex;flex-direction:column}
 .daynav{display:flex;gap:6px}
-.daynav button{width:38px;height:38px;border-radius:8px;background:var(--panel2);border:1px solid var(--line2);color:var(--ink2);font-size:16px;display:grid;place-items:center}
-.daynav button:hover{border-color:var(--accent);color:#fff}
+.daynav button{width:40px;height:40px;border-radius:9px;background:#fff;border:1.5px solid var(--line2);color:var(--ink2);font-size:17px;display:grid;place-items:center;transition:.15s}
+.daynav button:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
 .kpis{display:flex;gap:12px;margin-left:auto;flex-wrap:wrap}
-.kpi{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 16px;min-width:96px}
-.kpi .n{font-family:'Oswald';font-weight:700;font-size:26px;line-height:1;color:#fff}
-.kpi .l{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-top:4px;font-weight:600}
-.kpi.moto .n{color:var(--moto)}
+.kpi{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:11px 18px;min-width:98px;box-shadow:var(--shadow-sm)}
+.kpi .n{font-family:'Barlow Condensed';font-weight:700;font-size:28px;line-height:1;color:var(--ink)}
+.kpi .l{font-size:10px;letter-spacing:.8px;text-transform:uppercase;color:var(--muted);margin-top:4px;font-weight:700}
+.kpi.moto .n{color:var(--moto)}.kpi.disp .n{color:var(--good)}
 
-.cols{display:grid;grid-template-columns:1fr 380px;gap:18px;align-items:start}
+.cols{display:grid;grid-template-columns:1fr 400px;gap:18px;align-items:start}
 @media(max-width:980px){.cols{grid-template-columns:1fr}}
 
-.svc-block{background:var(--panel);border:1px solid var(--line);border-radius:12px;margin-bottom:14px;overflow:hidden}
-.svc-head{padding:13px 16px;background:linear-gradient(90deg,var(--panel2),var(--panel));border-bottom:1px solid var(--line);display:flex;align-items:center;gap:11px}
-.svc-head .nm{font-family:'Oswald';font-weight:600;font-size:15px;letter-spacing:.6px;text-transform:uppercase}
-.svc-head .ct{margin-left:auto;font-family:'Oswald';font-weight:700;font-size:18px;color:#fff;background:var(--bg2);padding:2px 11px;border-radius:7px;border:1px solid var(--line2)}
+.svc-block{background:var(--panel);border:1px solid var(--line);border-radius:14px;margin-bottom:14px;overflow:hidden;box-shadow:var(--shadow-sm)}
+.svc-head{padding:13px 16px;background:var(--panel2);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:11px}
+.svc-head .nm{font-family:'Barlow Condensed';font-weight:700;font-size:15.5px;letter-spacing:.4px;text-transform:uppercase;color:var(--ink)}
+.svc-head .ct{margin-left:auto;font-family:'Barlow Condensed';font-weight:700;font-size:18px;color:var(--accent);background:var(--accent-soft);padding:2px 12px;border-radius:8px}
 .svc-head.has-moto{border-left:3px solid var(--moto)}
 .eff-list{padding:6px 8px}
-.eff{display:flex;align-items:center;gap:12px;padding:8px 10px;border-radius:8px}
+.eff{display:flex;align-items:center;gap:12px;padding:8px 10px;border-radius:9px}
 .eff:hover{background:var(--panel2)}
 .eff .lp{font-family:'JetBrains Mono';font-weight:700;font-size:13px;color:var(--accent);min-width:58px}
-.eff .nom{font-weight:600;font-size:13.5px}
-.eff .jer{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.3px}
+.eff .nom{font-weight:600;font-size:13.5px;color:var(--ink)}
+.eff .jer{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.2px}
 .eff .dep{margin-left:auto;font-size:11px;color:var(--faint);text-align:right;max-width:230px}
-.eff .x{opacity:0;color:#ff8585;background:none;border:none;font-size:16px;padding:2px 6px;transition:.15s}
-.eff:hover .x{opacity:.7}.eff .x:hover{opacity:1}
-.empty{padding:40px 20px;text-align:center;color:var(--faint);font-size:13.5px}
+.eff .x{opacity:0;color:var(--bad);background:none;border:none;font-size:15px;padding:2px 7px;border-radius:6px;transition:.15s}
+.eff:hover .x{opacity:.7}.eff .x:hover{opacity:1;background:var(--bad-soft)}
+.empty{padding:40px 20px;text-align:center;color:var(--faint);font-size:13.5px;line-height:1.6}
 .empty svg{width:34px;height:34px;opacity:.4;margin-bottom:10px}
 
 /* Sugeridor */
-.sug{position:sticky;top:84px}
+.sug{position:sticky;top:86px}
 .sug-svc{margin-bottom:14px}
-.dep-rank{display:flex;flex-direction:column;gap:7px}
-.dep-row{background:var(--bg2);border:1px solid var(--line);border-radius:9px;padding:10px 13px;display:flex;align-items:center;gap:11px;transition:.15s}
-.dep-row:hover{border-color:var(--line2)}
-.dep-row.zero{opacity:.5}
+.dep-rank{display:flex;flex-direction:column;gap:8px}
+.dep-row{background:var(--panel2);border:1px solid var(--line);border-radius:11px;overflow:hidden;transition:.15s}
+.dep-row.zero{opacity:.55}
 .dep-row.moto-cap{border-left:3px solid var(--moto)}
+.dep-head{padding:10px 13px;display:flex;align-items:center;gap:11px;cursor:pointer}
+.dep-head:hover{background:var(--panel3)}
 .dep-bar{flex:1;min-width:0}
-.dep-nm{font-size:12px;font-weight:600;color:var(--ink2);line-height:1.25;margin-bottom:6px}
-.bar{height:7px;background:#0a1119;border-radius:4px;overflow:hidden}
-.bar > i{display:block;height:100%;background:linear-gradient(90deg,var(--good),#4ade80);border-radius:4px;transition:width .4s}
+.dep-nm{font-size:12px;font-weight:700;color:var(--ink2);line-height:1.25;margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.caret{transition:transform .2s;color:var(--faint);font-size:10px}
+.dep-row.open .caret{transform:rotate(90deg)}
+.bar{height:7px;background:#dde6f1;border-radius:4px;overflow:hidden}
+.bar>i{display:block;height:100%;background:linear-gradient(90deg,var(--good),#34d399);border-radius:4px;transition:width .4s}
 .dep-n{text-align:right;flex-shrink:0}
-.dep-n b{font-family:'Oswald';font-weight:700;font-size:21px;color:var(--good);line-height:1}
-.dep-n .of{font-size:10px;color:var(--faint);display:block}
+.dep-n b{font-family:'Barlow Condensed';font-weight:700;font-size:22px;color:var(--good);line-height:1}
+.dep-n .of{font-size:10px;color:var(--faint);display:block;font-weight:600}
 .dep-n.moto b{color:var(--moto)}
-.sug-hint{font-size:11.5px;color:var(--muted);margin-top:12px;line-height:1.5;padding-top:12px;border-top:1px solid var(--line)}
-.sug-hint b{color:var(--moto)}
+/* efectivos drill */
+.dep-eff{border-top:1px dashed var(--line2);background:#fff;display:none}
+.dep-row.open .dep-eff{display:block}
+.de-row{display:flex;align-items:center;gap:9px;padding:7px 13px;border-bottom:1px solid var(--panel3)}
+.de-row:last-child{border-bottom:none}
+.de-lp{font-family:'JetBrains Mono';font-weight:700;font-size:12px;color:var(--accent);min-width:50px}
+.de-nm{font-size:12.5px;font-weight:600;color:var(--ink);flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.de-load{font-size:10px;font-weight:700;letter-spacing:.2px;padding:2px 7px;border-radius:20px;white-space:nowrap}
+.load-0{background:var(--good-soft);color:var(--good)}
+.load-mid{background:#eef3fa;color:var(--ink2)}
+.load-hi{background:var(--moto-soft);color:var(--moto-d)}
+.de-add{border:1px solid var(--line2);background:#fff;color:var(--accent);font-weight:700;font-size:11px;border-radius:7px;padding:3px 9px;transition:.12s;white-space:nowrap}
+.de-add:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
+.de-add.moto{color:var(--moto-d)}.de-add.moto:hover{background:var(--moto);color:#fff;border-color:var(--moto)}
+.de-empty{padding:10px 13px;font-size:11.5px;color:var(--faint)}
+.sug-hint{font-size:11.5px;color:var(--muted);margin-top:13px;line-height:1.55;padding-top:13px;border-top:1px solid var(--line)}
+.sug-hint b{color:var(--ink2)}
 
-/* ---------- Cargar ---------- */
+/* Cargar */
 .cargar-grid{display:grid;grid-template-columns:400px 1fr;gap:18px;align-items:start}
 @media(max-width:900px){.cargar-grid{grid-template-columns:1fr}}
 .fld{margin-bottom:15px}
 .rol-pick{display:flex;gap:8px}
-.rol-opt{flex:1;border:1px solid var(--line2);background:var(--bg2);border-radius:8px;padding:10px;text-align:center;font-weight:600;font-size:13px;transition:.15s;color:var(--ink2)}
-.rol-opt.sel-inf{border-color:var(--accent);background:rgba(59,130,246,.12);color:#fff}
-.rol-opt.sel-moto{border-color:var(--moto);background:rgba(245,158,11,.12);color:#fff}
-.rol-opt:disabled{opacity:.4;cursor:not-allowed}
+.rol-opt{flex:1;border:1.5px solid var(--line2);background:#fff;border-radius:9px;padding:10px;text-align:center;font-weight:600;font-size:13px;transition:.15s;color:var(--ink2)}
+.rol-opt.sel-inf{border-color:var(--accent);background:var(--accent-soft);color:var(--accent-d)}
+.rol-opt.sel-moto{border-color:var(--moto);background:var(--moto-soft);color:var(--moto-d)}
 .search-box{position:relative}
-.results{position:absolute;top:100%;left:0;right:0;background:var(--panel2);border:1px solid var(--line2);border-top:none;border-radius:0 0 8px 8px;max-height:260px;overflow-y:auto;z-index:20;box-shadow:0 12px 30px rgba(0,0,0,.5)}
-.res-item{padding:9px 12px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--line);cursor:pointer}
+.results{position:absolute;top:100%;left:0;right:0;background:#fff;border:1.5px solid var(--line2);border-top:none;border-radius:0 0 9px 9px;max-height:280px;overflow-y:auto;z-index:20;box-shadow:var(--shadow-lg)}
+.res-item{padding:9px 12px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--panel3);cursor:pointer}
 .res-item:hover,.res-item.hl{background:var(--accent);color:#fff}
-.res-item:hover .r-dep,.res-item.hl .r-dep{color:#cfe0ff}
+.res-item:hover .r-dep,.res-item.hl .r-dep,.res-item:hover .r-load,.res-item.hl .r-load{color:#cfe0ff}
 .res-item.busy{opacity:.4;cursor:not-allowed;pointer-events:none}
 .r-lp{font-family:'JetBrains Mono';font-weight:700;font-size:13px;min-width:54px}
 .r-nm{font-weight:600;font-size:13px}
-.r-dep{font-size:10.5px;color:var(--muted);margin-left:auto;max-width:160px;text-align:right}
-.r-moto{color:var(--moto);font-size:12px}
+.r-load{font-size:10.5px;color:var(--muted);font-weight:700}
+.r-dep{font-size:10.5px;color:var(--muted);margin-left:auto;max-width:150px;text-align:right}
+.r-moto{color:var(--moto)}
 .added-list{display:flex;flex-direction:column;gap:8px;max-height:560px;overflow-y:auto}
-.added-row{background:var(--bg2);border:1px solid var(--line);border-radius:9px;padding:10px 13px;display:flex;align-items:center;gap:12px}
-.added-row .x{margin-left:auto}
-.banner{padding:11px 14px;border-radius:9px;font-size:13px;font-weight:500;margin-bottom:15px;display:none;align-items:center;gap:9px}
+.added-row{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:10px 13px;display:flex;align-items:center;gap:12px}
+.banner{padding:11px 14px;border-radius:10px;font-size:13px;font-weight:600;margin-bottom:15px;display:none;align-items:center;gap:9px}
 .banner.show{display:flex}
-.banner.ok{background:var(--good-bg);border:1px solid #1d5436;color:#7ee2a6}
-.banner.err{background:var(--bad-bg);border:1px solid #5a2424;color:#ff9b9b}
+.banner.ok{background:var(--good-soft);border:1px solid #b4e6cd;color:#057a51}
+.banner.err{background:var(--bad-soft);border:1px solid #f3c2c2;color:#c41f1f}
 
-/* ---------- Mensual ---------- */
+/* Mensual */
 .month-bar{display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap;margin-bottom:18px}
-.tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px}
-table.grid{border-collapse:collapse;width:100%;font-size:12px}
+.tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow-sm)}
+table.grid{border-collapse:collapse;width:100%;font-size:12px;background:#fff}
 table.grid th,table.grid td{border:1px solid var(--line);padding:6px 8px;text-align:center;white-space:nowrap}
-table.grid thead th{background:var(--panel2);color:var(--ink2);font-family:'Oswald';font-weight:500;letter-spacing:.5px;position:sticky;top:0;font-size:11px;text-transform:uppercase}
-table.grid td.dep-cell{text-align:left;font-weight:600;color:var(--ink2);background:var(--panel);position:sticky;left:0;min-width:230px;max-width:230px;white-space:normal;font-size:11.5px;line-height:1.3}
+table.grid thead th{background:var(--panel2);color:var(--ink2);font-family:'Barlow Condensed';font-weight:600;letter-spacing:.4px;position:sticky;top:0;font-size:11px;text-transform:uppercase}
+table.grid td.dep-cell{text-align:left;font-weight:600;color:var(--ink2);background:#fff;position:sticky;left:0;min-width:230px;max-width:230px;white-space:normal;font-size:11.5px;line-height:1.3}
 table.grid th.dep-cell{text-align:left;background:var(--panel2);position:sticky;left:0;z-index:2}
-table.grid td.wknd{background:rgba(255,255,255,.02)}
+table.grid td.wknd{background:#f4f7fb}
 table.grid td .cv{display:inline-block;min-width:20px;padding:1px 6px;border-radius:5px;font-family:'JetBrains Mono';font-weight:700}
-.cv.has{background:rgba(59,130,246,.18);color:#8fc0ff}
-.cv.moto{background:rgba(245,158,11,.18);color:var(--moto)}
-table.grid tr.tot td{background:var(--panel2);font-family:'Oswald';font-weight:600;color:#fff}
-table.grid td.tot-cell{text-align:right;font-weight:700;background:var(--panel);position:sticky;left:0}
+.cv.has{background:var(--accent-soft);color:var(--accent-d)}
+.cv.moto{background:var(--moto-soft);color:var(--moto-d)}
+table.grid tr.tot td{background:var(--panel2);font-family:'Barlow Condensed';font-weight:700;color:var(--ink)}
+table.grid td.tot-cell{text-align:right;font-weight:700;background:#fff;position:sticky;left:0}
 
-/* ---------- Servicios ---------- */
+/* Servicios */
 .svc-manage{display:flex;flex-direction:column;gap:9px}
-.svc-card{background:var(--bg2);border:1px solid var(--line);border-radius:9px;padding:12px 14px;display:flex;align-items:center;gap:13px}
+.svc-card{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:13px}
 .svc-card.moto{border-left:3px solid var(--moto)}
-.svc-card .snm{font-family:'Oswald';font-weight:500;font-size:14px;letter-spacing:.4px;text-transform:uppercase}
+.svc-card .snm{font-family:'Barlow Condensed';font-weight:600;font-size:14.5px;letter-spacing:.3px;text-transform:uppercase;color:var(--ink)}
 .svc-card .meta{font-size:11px;color:var(--muted)}
 .svc-card .acts{margin-left:auto;display:flex;gap:7px}
-.add-svc{background:var(--bg2);border:1px dashed var(--line2);border-radius:9px;padding:14px;margin-top:6px}
+.add-svc{background:var(--panel2);border:1px dashed var(--line2);border-radius:10px;padding:14px;margin-top:6px}
 
-.spinner{width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;display:inline-block}
+/* Semanal */
+.week-bar{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:18px}
+.week-title{font-family:'Barlow Condensed';font-weight:700;font-size:18px;color:var(--ink);text-transform:uppercase;letter-spacing:.4px}
+table.grid th.day-h{cursor:pointer;transition:.12s}
+table.grid th.day-h:hover{background:var(--accent-soft);color:var(--accent)}
+table.grid th.day-h .dn{display:block;font-size:13px;font-weight:700}
+table.grid th.day-h .dd{display:block;font-size:10px;color:var(--muted);font-weight:600}
+table.grid th.day-h.today{background:var(--accent);color:#fff}
+table.grid th.day-h.today .dd{color:#cfe0ff}
+
+/* Efectivos (roster) */
+.ros-bar{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:18px}
+.ros-search{flex:1;min-width:200px;max-width:380px}
+.ros-dep{margin-bottom:20px}
+.ros-dephead{display:flex;align-items:center;gap:10px;margin-bottom:9px;padding-bottom:7px;border-bottom:1.5px solid var(--line)}
+.ros-dephead .nm{font-family:'Barlow Condensed';font-weight:700;font-size:14.5px;text-transform:uppercase;color:var(--ink);letter-spacing:.3px}
+.ros-dephead .ct{font-size:11px;color:var(--muted);font-weight:700;background:var(--panel2);padding:2px 10px;border-radius:20px}
+.ros-dephead .moto-tag{font-size:10px;color:var(--moto-d);font-weight:700;background:var(--moto-soft);padding:2px 9px;border-radius:20px;border:1px solid #f5d39a}
+.ros-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:8px}
+.ros-row{display:flex;align-items:center;gap:10px;padding:9px 12px;border:1px solid var(--line);border-radius:10px;background:#fff}
+.ros-row .lp{font-family:'JetBrains Mono';font-weight:700;color:var(--accent);min-width:54px;font-size:13px}
+.ros-row .info{min-width:0;flex:1}
+.ros-row .nm{font-weight:600;font-size:13.5px;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ros-row .sub{font-size:11px;color:var(--muted)}
+.ros-row .acts{margin-left:auto;display:flex;gap:5px}
+.icon-btn{border:1px solid var(--line2);background:#fff;border-radius:7px;width:30px;height:30px;display:grid;place-items:center;color:var(--ink2);transition:.12s}
+.icon-btn:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
+.icon-btn.del:hover{border-color:var(--bad);color:var(--bad);background:var(--bad-soft)}
+.icon-btn svg{width:15px;height:15px;fill:currentColor}
+
+/* Modal */
+.modal-bg{position:fixed;inset:0;background:rgba(15,29,51,.45);backdrop-filter:blur(2px);display:none;place-items:center;z-index:80;padding:1rem}
+.modal-bg.show{display:grid}
+.modal{background:#fff;border:1px solid var(--line);border-radius:18px;padding:24px;width:460px;max-width:100%;box-shadow:var(--shadow-lg);max-height:92vh;overflow:auto;animation:fade .2s ease}
+.modal h3{font-family:'Barlow Condensed';font-weight:700;font-size:19px;text-transform:uppercase;letter-spacing:.4px;color:var(--ink);margin-bottom:16px}
+.modal .grid2{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+.modal .modal-acts{display:flex;gap:9px;justify-content:flex-end;margin-top:20px}
+.modal .chk{display:flex;align-items:center;gap:9px;padding:11px 13px;background:var(--moto-soft);border:1px solid #f5d39a;border-radius:9px;margin-top:13px}
+.modal .chk label{font-size:13px;font-weight:600;color:var(--moto-d);cursor:pointer}
+.modal .err{color:var(--bad);font-size:12px;font-weight:600;margin-top:10px;min-height:1em}
+
+/* Toast */
+.toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:12px 22px;border-radius:30px;font-weight:600;font-size:13.5px;box-shadow:var(--shadow-lg);opacity:0;pointer-events:none;transition:.3s;z-index:90;display:flex;align-items:center;gap:8px}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+.spinner{width:16px;height:16px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;display:inline-block}
 @keyframes spin{to{transform:rotate(360deg)}}
 .loading-screen{position:fixed;inset:0;background:var(--bg);display:grid;place-items:center;z-index:100}
 .loading-screen .box{text-align:center}
-.loading-screen .spinner{width:34px;height:34px;border-width:3px;margin-bottom:14px}
-.loading-screen p{color:var(--muted);font-family:'Oswald';letter-spacing:2px;text-transform:uppercase;font-size:13px}
+.loading-screen .spinner{width:34px;height:34px;border-width:3px;border-color:#cfdaea;border-top-color:var(--accent);margin-bottom:14px}
+.loading-screen p{color:var(--muted);font-family:'Barlow Condensed';letter-spacing:2px;text-transform:uppercase;font-size:13px}
 </style>
 </head>
 <body>
@@ -190,11 +251,9 @@ table.grid td.tot-cell{text-align:right;font-weight:700;background:var(--panel);
 <div class="topbar">
   <div class="topbar-in">
     <div class="brand">
-      <div class="shield">
-        <svg viewBox="0 0 24 24" fill="none"><path d="M12 2l7 3v6c0 4.5-3 8.5-7 9-4-.5-7-4.5-7-9V5l7-3z" fill="#3b82f6" opacity=".25"/><path d="M12 2l7 3v6c0 4.5-3 8.5-7 9-4-.5-7-4.5-7-9V5l7-3z" stroke="#5b9bff" stroke-width="1.3"/><path d="M9 12l2 2 4-4.5" stroke="#9cc4ff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </div>
+      <div class="shield"><svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 4l5 2.18V11c0 3.5-2.33 6.79-5 7.93-2.67-1.14-5-4.43-5-7.93V7.18L12 5z"/></svg></div>
       <div>
-        <h1>Afectación Diaria</h1>
+        <h1>Afectación de Servicios</h1>
         <div class="sub">DSED · DPEM</div>
       </div>
     </div>
@@ -203,36 +262,38 @@ table.grid td.tot-cell{text-align:right;font-weight:700;background:var(--panel);
   <div class="tabs">
     <button class="tab active" data-view="tablero">Tablero</button>
     <button class="tab" data-view="cargar">Cargar</button>
+    <button class="tab" data-view="semanal">Semanal</button>
     <button class="tab" data-view="mensual">Mensual</button>
+    <button class="tab" data-view="efectivos">Efectivos</button>
     <button class="tab" data-view="servicios">Servicios</button>
   </div>
 </div>
 
 <div class="wrap">
-  <!-- ===================== TABLERO ===================== -->
+  <!-- TABLERO -->
   <div class="view active" id="view-tablero">
     <div class="board-top">
-      <div class="date-pick">
+      <div>
         <label class="lbl">Fecha</label>
         <div style="display:flex;gap:8px">
           <div class="daynav"><button id="dayPrev">‹</button></div>
           <input type="date" class="f" id="boardDate" style="width:175px">
-          <div class="daynav"><button id="dayNext">›</button><button id="dayToday" title="Hoy" style="font-size:11px;font-weight:600">HOY</button></div>
+          <div class="daynav"><button id="dayNext">›</button><button id="dayToday" title="Hoy" style="font-size:11px;font-weight:700">HOY</button></div>
         </div>
       </div>
+      <button class="btn ghost" id="waBtn" style="align-self:flex-end">📋 Resumen WhatsApp</button>
       <div class="kpis">
         <div class="kpi"><div class="n" id="kpiTotal">0</div><div class="l">Afectados</div></div>
         <div class="kpi"><div class="n" id="kpiServ">0</div><div class="l">Servicios</div></div>
         <div class="kpi moto"><div class="n" id="kpiMoto">0</div><div class="l">Motos</div></div>
-        <div class="kpi"><div class="n" id="kpiDisp">0</div><div class="l">Disponibles</div></div>
+        <div class="kpi disp"><div class="n" id="kpiDisp">0</div><div class="l">Disponibles</div></div>
       </div>
     </div>
-
     <div class="cols">
       <div id="boardServices"></div>
       <div class="sug">
         <div class="panel">
-          <div class="panel-h"><span class="pin"></span>Sugeridor de dependencias</div>
+          <div class="panel-h"><span class="pin"></span>Sugeridor de efectivos</div>
           <div class="sug-svc">
             <label class="lbl">Para el servicio</label>
             <select class="f" id="sugService"></select>
@@ -244,20 +305,14 @@ table.grid td.tot-cell{text-align:right;font-weight:700;background:var(--panel);
     </div>
   </div>
 
-  <!-- ===================== CARGAR ===================== -->
+  <!-- CARGAR -->
   <div class="view" id="view-cargar">
     <div class="banner" id="cargarBanner"></div>
     <div class="cargar-grid">
       <div class="panel">
         <div class="panel-h"><span class="pin"></span>Nueva afectación</div>
-        <div class="fld">
-          <label class="lbl">Fecha</label>
-          <input type="date" class="f" id="cargarDate">
-        </div>
-        <div class="fld">
-          <label class="lbl">Servicio</label>
-          <select class="f" id="cargarService"></select>
-        </div>
+        <div class="fld"><label class="lbl">Fecha</label><input type="date" class="f" id="cargarDate"></div>
+        <div class="fld"><label class="lbl">Servicio</label><select class="f" id="cargarService"></select></div>
         <div class="fld" id="rolFld" style="display:none">
           <label class="lbl">Rol en el servicio</label>
           <div class="rol-pick">
@@ -272,10 +327,9 @@ table.grid td.tot-cell{text-align:right;font-weight:700;background:var(--panel);
             <input type="text" class="f" id="effSearch" placeholder="Buscar por L.P. o apellido…" autocomplete="off">
             <div class="results" id="effResults" style="display:none"></div>
           </div>
-          <div class="muted" id="rolNote" style="font-size:11px;margin-top:7px">Seleccioná un efectivo para afectarlo a esta fecha.</div>
+          <div class="muted" id="rolNote" style="font-size:11px;margin-top:7px">El número junto a cada nombre es cuántos servicios hizo este mes.</div>
         </div>
       </div>
-
       <div class="panel">
         <div class="panel-h"><span class="pin"></span>Cargados el <span id="cargarDateLbl" style="color:var(--accent);margin-left:5px">—</span></div>
         <div class="added-list" id="addedList"></div>
@@ -283,24 +337,41 @@ table.grid td.tot-cell{text-align:right;font-weight:700;background:var(--panel);
     </div>
   </div>
 
-  <!-- ===================== MENSUAL ===================== -->
+  <!-- SEMANAL -->
+  <div class="view" id="view-semanal">
+    <div class="week-bar">
+      <div class="daynav"><button id="weekPrev">‹</button></div>
+      <div class="week-title" id="weekTitle">—</div>
+      <div class="daynav"><button id="weekNext">›</button><button id="weekThis" title="Esta semana" style="font-size:11px;font-weight:700">HOY</button></div>
+      <div style="margin-left:auto" class="muted" id="weekTotal"></div>
+    </div>
+    <div class="tbl-wrap"><div id="weekTable"></div></div>
+    <div class="muted" style="font-size:11.5px;margin-top:12px">Tocá el encabezado de un día para abrirlo en el Tablero. En ámbar, las motos.</div>
+  </div>
+
+  <!-- MENSUAL -->
   <div class="view" id="view-mensual">
     <div class="month-bar">
-      <div>
-        <label class="lbl">Mes</label>
-        <input type="month" class="f" id="monthPick" style="width:180px">
-      </div>
-      <div style="margin-left:auto;display:flex;gap:9px">
-        <button class="btn ghost sm" id="exportBtn">⬇ Exportar Excel</button>
-      </div>
+      <div><label class="lbl">Mes</label><input type="month" class="f" id="monthPick" style="width:180px"></div>
+      <div style="margin-left:auto;display:flex;gap:9px"><button class="btn ghost sm" id="exportBtn">⬇ Exportar Excel</button></div>
     </div>
     <div class="tbl-wrap"><div id="monthTable"></div></div>
     <div class="muted" style="font-size:11.5px;margin-top:12px">El número en cada celda es la cantidad de efectivos afectados de esa dependencia ese día. En ámbar, las motos (Acompañamientos Especiales y Grupo de Acompañamiento Deportivos).</div>
   </div>
 
-  <!-- ===================== SERVICIOS ===================== -->
+  <!-- EFECTIVOS -->
+  <div class="view" id="view-efectivos">
+    <div class="ros-bar">
+      <input type="text" class="f ros-search" id="rosSearch" placeholder="Buscar por legajo, apellido o dependencia…" autocomplete="off">
+      <span class="muted" id="rosCount" style="font-size:12.5px"></span>
+      <button class="btn" id="rosAddBtn" style="margin-left:auto">＋ Agregar efectivo</button>
+    </div>
+    <div id="rosList"></div>
+  </div>
+
+  <!-- SERVICIOS -->
   <div class="view" id="view-servicios">
-    <div class="row" style="align-items:flex-start">
+    <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:flex-start">
       <div class="panel" style="flex:1;min-width:320px">
         <div class="panel-h"><span class="pin"></span>Catálogo de servicios</div>
         <div class="svc-manage" id="svcManage"></div>
@@ -315,22 +386,46 @@ table.grid td.tot-cell{text-align:right;font-weight:700;background:var(--panel);
       </div>
       <div class="panel" style="width:340px">
         <div class="panel-h"><span class="pin"></span>Dependencias con moto</div>
-        <p class="muted" style="font-size:12.5px;line-height:1.6">Sólo estas dos divisiones pueden aportar motos a Movistar Arena:</p>
-        <div style="margin-top:12px;display:flex;flex-direction:column;gap:9px">
-          <div class="svc-card moto"><span class="chip moto">MOTO</span><span class="snm" style="font-size:12.5px">Acompañamientos Especiales</span></div>
-          <div class="svc-card moto"><span class="chip moto">MOTO</span><span class="snm" style="font-size:12.5px">Grupo de Acompañamiento Deportivos</span></div>
-        </div>
+        <p class="muted" style="font-size:12.5px;line-height:1.6">Divisiones que tienen efectivos con moto (pueden aportar motos a Movistar Arena):</p>
+        <div style="margin-top:12px;display:flex;flex-direction:column;gap:9px" id="motoDeps"></div>
         <p class="muted" style="font-size:11.5px;line-height:1.6;margin-top:14px">El resto de las dependencias sólo aporta infantería. En Movistar Arena se piden de 2 a 4 motos.</p>
       </div>
     </div>
   </div>
 </div>
 
+<!-- MODAL EFECTIVO -->
+<div class="modal-bg" id="effModal">
+  <div class="modal">
+    <h3 id="effModalTitle">Nuevo efectivo</h3>
+    <div class="grid2">
+      <div><label class="lbl">Legajo (L.P.)</label><input type="number" class="f" id="m_lp" inputmode="numeric"></div>
+      <div><label class="lbl">Jerarquía</label><input type="text" class="f" id="m_jer" list="jerList" placeholder="Ej: OFICIAL"></div>
+    </div>
+    <div class="grid2" style="margin-top:13px">
+      <div><label class="lbl">Apellido/s</label><input type="text" class="f" id="m_ape"></div>
+      <div><label class="lbl">Nombre/s</label><input type="text" class="f" id="m_nom"></div>
+    </div>
+    <div style="margin-top:13px"><label class="lbl">Dependencia</label><input type="text" class="f" id="m_dep" list="depList" placeholder="División / Departamento"></div>
+    <div style="margin-top:13px"><label class="lbl">Contacto</label><input type="text" class="f" id="m_cont" placeholder="Teléfono (opcional)"></div>
+    <div class="chk"><input type="checkbox" id="m_moto"><label for="m_moto">🏍 Tiene moto (puede ir como moto a Movistar Arena)</label></div>
+    <div class="err" id="m_err"></div>
+    <div class="modal-acts">
+      <button class="btn ghost" id="m_cancel">Cancelar</button>
+      <button class="btn" id="m_save">Guardar</button>
+    </div>
+  </div>
+</div>
+<datalist id="jerList"></datalist>
+<datalist id="depList"></datalist>
+
+<div class="toast" id="toast"></div>
+
 <script id="seedData" type="application/json">{"efectivos":[{"lp":73322,"jerarquia":"PRINCIPAL","apellido":"QUIROGA","nombre":"ADRIAN ALEJANDRO","dependencia":"DEPARTAMENTO SEGURIDAD EN ESPECTACULOS PUBLICOS","contacto":"1135231987","moto":false},{"lp":14765,"jerarquia":"OFICIAL PRIMERO","apellido":"DIAZ","nombre":"MICAELA BELEN","dependencia":"DEPARTAMENTO SEGURIDAD EN ESPECTACULOS PUBLICOS","contacto":"1166444214","moto":false},{"lp":15025,"jerarquia":"OFICIAL PRIMERO","apellido":"MILLAN","nombre":"MATIAS ALEJANDRO","dependencia":"DEPARTAMENTO SEGURIDAD EN ESPECTACULOS PUBLICOS","contacto":"1123920047","moto":false},{"lp":27844,"jerarquia":"INSPECTOR","apellido":"MAIELLARO","nombre":"FACUNDO FEDERICO","dependencia":"DEPARTAMENTO SEGURIDAD EN EVENTOS DEPORTIVOS","contacto":"1159137562","moto":false},{"lp":5310,"jerarquia":"OFICIAL MAYOR","apellido":"CAMPOS","nombre":"FERNANDO GABRIEL","dependencia":"DEPARTAMENTO SEGURIDAD EN EVENTOS DEPORTIVOS","contacto":"1150115624","moto":false},{"lp":41891,"jerarquia":"OFICIAL MAYOR","apellido":"SOSA","nombre":"PABLO SEBASTIAN","dependencia":"DEPARTAMENTO SEGURIDAD EN EVENTOS DEPORTIVOS","contacto":"1126434231","moto":false},{"lp":29174,"jerarquia":"OFICIAL","apellido":"AQUINO","nombre":"ANDREA CELESTE","dependencia":"DEPARTAMENTO SEGURIDAD EN EVENTOS DEPORTIVOS","contacto":"1128972223","moto":false},{"lp":11401,"jerarquia":"PRINCIPAL","apellido":"DAVID","nombre":"ROMINA PAMELA","dependencia":"DIVISION INFORMES PREVENTIVOS","contacto":"1131588949","moto":false},{"lp":10290,"jerarquia":"INSPECTOR","apellido":"FERRARA","nombre":"SERGIO DARIO","dependencia":"DIVISION INFORMES PREVENTIVOS","contacto":"1160163460","moto":false},{"lp":46896,"jerarquia":"OFICIAL MAYOR","apellido":"CALDERON","nombre":"EVA ELISA","dependencia":"DIVISION INFORMES PREVENTIVOS","contacto":"1132792466","moto":false},{"lp":38154,"jerarquia":"OFICIAL MAYOR","apellido":"BAZAN","nombre":"JESICA TAMARA","dependencia":"DIVISION INFORMES PREVENTIVOS","contacto":"1134645524","moto":false},{"lp":5404,"jerarquia":"OFICIAL MAYOR","apellido":"MOLINA","nombre":"LAUTARO NAHUEL","dependencia":"DIVISION INFORMES PREVENTIVOS","contacto":"1150161295","moto":false},{"lp":2682,"jerarquia":"OFICIAL MAYOR","apellido":"GALVAN","nombre":"GABRIELA","dependencia":"DIVISION INFORMES PREVENTIVOS","contacto":"1132327942","moto":false},{"lp":6538,"jerarquia":"OFICIAL PRIMERO","apellido":"SENOL","nombre":"EDGARDO RAFAEL","dependencia":"DIVISION INFORMES PREVENTIVOS","contacto":"1164239062","moto":false},{"lp":6130,"jerarquia":"OFICIAL","apellido":"BARRIOS","nombre":"JULIETA TAMARA","dependencia":"DIVISION INFORMES PREVENTIVOS","contacto":"1123200400","moto":false},{"lp":57810,"jerarquia":"OFICIAL","apellido":"RIQUELME","nombre":"YANINA NOELIA","dependencia":"DIVISION INFORMES PREVENTIVOS","contacto":"1132801779","moto":false},{"lp":28618,"jerarquia":"OFICIAL","apellido":"ROMANO DIAZ","nombre":"DANTE SEBASTIAN","dependencia":"DIVISION INFORMES PREVENTIVOS","contacto":"1151808011","moto":false},{"lp":59660,"jerarquia":"OFICIAL","apellido":"RUIZ DÍAZ","nombre":"JOEL AGUSTIN","dependencia":"DIVISION INFORMES PREVENTIVOS","contacto":"1151393554","moto":false},{"lp":2070,"jerarquia":"PRINCIPAL","apellido":"ESCOBAR","nombre":"LAURA NOEMI","dependencia":"DIVISION ARMERIA Y LOGISTICA","contacto":"1163092022","moto":false},{"lp":2913,"jerarquia":"PRINCIPAL","apellido":"ROMANO OZORIO","nombre":"JAVIER","dependencia":"DIVISION ARMERIA Y LOGISTICA","contacto":"1156300666","moto":false},{"lp":27127,"jerarquia":"INSPECTOR","apellido":"PIETKIEWICZ","nombre":"SEBASTIAN MANUEL","dependencia":"DIVISION ARMERIA Y LOGISTICA","contacto":"1160282937","moto":false},{"lp":2281,"jerarquia":"INSPECTOR","apellido":"DE ASPE","nombre":"SEBASTIAN","dependencia":"DIVISION ARMERIA Y LOGISTICA","contacto":"1137756581","moto":false},{"lp":5308,"jerarquia":"INSPECTOR","apellido":"FIGUEIRAS","nombre":"LUCAS MARCELO","dependencia":"DIVISION ARMERIA Y LOGISTICA","contacto":"1151065692","moto":false},{"lp":3903,"jerarquia":"INSPECTOR","apellido":"ROLDAN","nombre":"EMANUEL","dependencia":"DIVISION ARMERIA Y LOGISTICA","contacto":"1164811416","moto":false},{"lp":3741,"jerarquia":"INSPECTOR","apellido":"LANDRIEL MONTERO","nombre":"JESICA ROMINA","dependencia":"DIVISION ARMERIA Y LOGISTICA","contacto":"15628288669","moto":false},{"lp":8961,"jerarquia":"INSPECTOR","apellido":"PEREZ LINDO","nombre":"GUSTAVO EZEQUIEL","dependencia":"DIVISION ARMERIA Y LOGISTICA","contacto":"11 62562223","moto":false},{"lp":7784,"jerarquia":"OFICIAL PRIMERO","apellido":"BAEZ SUAREZ","nombre":"DANIELA LUDMILA","dependencia":"DIVISION ARMERIA Y LOGISTICA","contacto":"1133242694","moto":false},{"lp":6705,"jerarquia":"OFICIAL MAYOR","apellido":"GONZALEZ","nombre":"NICOLAS MATIAS","dependencia":"DIVISION ARMERIA Y LOGISTICA","contacto":"1162064997","moto":false},{"lp":82727,"jerarquia":"OFICIAL PRIMERO","apellido":"GARCIA","nombre":"DARIO EMMANUEL","dependencia":"DIVISION ARMERIA Y LOGISTICA","contacto":"1165164141","moto":false},{"lp":72233,"jerarquia":"OFICIAL PRIMERO","apellido":"MONTAÑA","nombre":"MARCELO FABIAN","dependencia":"DIVISION ARMERIA Y LOGISTICA","contacto":"1144770275","moto":false},{"lp":7804,"jerarquia":"OFICIAL PRIMERO","apellido":"MORINIGO","nombre":"PAMELA JACKELINE","dependencia":"DIVISION ARMERIA Y LOGISTICA","contacto":"113126-5992","moto":false},{"lp":7063,"jerarquia":"OFICIAL PRIMERO","apellido":"TILIAN","nombre":"FEDERICO GONZALO","dependencia":"DIVISION ARMERIA Y LOGISTICA","contacto":"1122560026","moto":false},{"lp":6380,"jerarquia":"OFICIAL","apellido":"DIAZ","nombre":"ALEJANDRO JAVIER","dependencia":"DIVISION ARMERIA Y LOGISTICA","contacto":"1138477532","moto":false},{"lp":28223,"jerarquia":"OFICIAL","apellido":"REJALA","nombre":"SABRINA EDITH","dependencia":"DIVISION ARMERIA Y LOGISTICA","contacto":"1126201211","moto":false},{"lp":46792,"jerarquia":"OFICIAL","apellido":"GARCIA","nombre":"FLAVIA LORENA","dependencia":"DIVISION ARMERIA Y LOGISTICA","contacto":"1132812457","moto":false},{"lp":16122,"jerarquia":"OFICIAL","apellido":"RAMIREZ","nombre":"CARLA LORENA","dependencia":"DIVISION ARMERIA Y LOGISTICA","contacto":"115606-7103","moto":false},{"lp":1391,"jerarquia":"PRINCIPAL","apellido":"MORETTO","nombre":"MARCELO EUGENIO","dependencia":"DIVISION GRUPO DE ACOMPAÑAMIENTO DEPORTIVOS","contacto":"11-5893-8088","moto":true},{"lp":71267,"jerarquia":"PRINCIPAL","apellido":"PIARRESTEGUY","nombre":"MATIAS RUBEN","dependencia":"DIVISION GRUPO DE ACOMPAÑAMIENTO DEPORTIVOS","contacto":"11-56681528","moto":true},{"lp":17071,"jerarquia":"PRINCIPAL","apellido":"RAMIREZ","nombre":"RAMON ANTONIO","dependencia":"DIVISION GRUPO DE ACOMPAÑAMIENTO DEPORTIVOS","contacto":"11-6027-5100","moto":true},{"lp":14447,"jerarquia":"INSPECTOR","apellido":"GONZALEZ","nombre":"EZEQUIEL IGNACIO","dependencia":"DIVISION GRUPO DE ACOMPAÑAMIENTO DEPORTIVOS","contacto":"11-3726-0514","moto":true},{"lp":5748,"jerarquia":"INSPECTOR","apellido":"PISTONE","nombre":"GABRIEL OSCAR","dependencia":"DIVISION GRUPO DE ACOMPAÑAMIENTO DEPORTIVOS","contacto":"11-68006853","moto":true},{"lp":6719,"jerarquia":"OFICIAL MAYOR","apellido":"MALDONE","nombre":"MARTIN MAXIMILIANO","dependencia":"DIVISION GRUPO DE ACOMPAÑAMIENTO DEPORTIVOS","contacto":"11-6761-8230","moto":true},{"lp":14093,"jerarquia":"OFICIAL MAYOR","apellido":"VILLARRUEL","nombre":"RUBEN OSCAR","dependencia":"DIVISION GRUPO DE ACOMPAÑAMIENTO DEPORTIVOS","contacto":"11-5108-1112","moto":true},{"lp":11323,"jerarquia":"OFICIAL MAYOR","apellido":"RODIRGUEZ BAMBILL","nombre":"MAURO EZEQUIEL","dependencia":"DIVISION GRUPO DE ACOMPAÑAMIENTO DEPORTIVOS","contacto":"11-51491311","moto":true},{"lp":42022,"jerarquia":"OFICIAL MAYOR","apellido":"OTERO","nombre":"JOSE CARLOS","dependencia":"DIVISION GRUPO DE ACOMPAÑAMIENTO DEPORTIVOS","contacto":"11-6716-2611","moto":true},{"lp":5431,"jerarquia":"OFICIAL MAYOR","apellido":"ACEVEDO","nombre":"CAROLINA SAMANTA","dependencia":"DIVISION GRUPO DE ACOMPAÑAMIENTO DEPORTIVOS","contacto":"11-2665-1548","moto":true},{"lp":41429,"jerarquia":"OFICIAL MAYOR","apellido":"CACERES","nombre":"CARLOS ADRIAN","dependencia":"DIVISION GRUPO DE ACOMPAÑAMIENTO DEPORTIVOS","contacto":"11-6700-2270","moto":true},{"lp":7615,"jerarquia":"OFICIAL MAYOR","apellido":"SALVATIERRA","nombre":"WALTER ALFREDO","dependencia":"DIVISION GRUPO DE ACOMPAÑAMIENTO DEPORTIVOS","contacto":"11-6236-8880","moto":true},{"lp":45707,"jerarquia":"OFICIAL PRIMERO","apellido":"MARMO","nombre":"EMILIANO ALDO","dependencia":"DIVISION GRUPO DE ACOMPAÑAMIENTO DEPORTIVOS","contacto":"11-6806-8972","moto":true},{"lp":27010,"jerarquia":"OFICIAL PRIMERO","apellido":"GALEANO","nombre":"CRECENCIO GABRIEL","dependencia":"DIVISION GRUPO DE ACOMPAÑAMIENTO DEPORTIVOS","contacto":"1130122406","moto":true},{"lp":77924,"jerarquia":"OFICIAL PRIMERO","apellido":"MANSILLA","nombre":"DAMIAN ALBERTO","dependencia":"DIVISION GRUPO DE ACOMPAÑAMIENTO DEPORTIVOS","contacto":"11-2719-3344","moto":true},{"lp":18540,"jerarquia":"OFICIAL PRIMERO","apellido":"DE MARTINO","nombre":"CRISTIAN DANIEL","dependencia":"DIVISION GRUPO DE ACOMPAÑAMIENTO DEPORTIVOS","contacto":"11-3210-8365","moto":true},{"lp":11872,"jerarquia":"OFICIAL PRIMERO","apellido":"CORTEZ","nombre":"ELIAS MAURO","dependencia":"DIVISION GRUPO DE ACOMPAÑAMIENTO DEPORTIVOS","contacto":"11-6459-9936","moto":true},{"lp":56903,"jerarquia":"OFICIAL","apellido":"AGNELLO","nombre":"JORGE ALBERTO","dependencia":"DIVISION GRUPO DE ACOMPAÑAMIENTO DEPORTIVOS","contacto":"1144247679","moto":true},{"lp":35362,"jerarquia":"OFICIAL","apellido":"FERNANDEZ","nombre":"ERIKA ANDREA","dependencia":"DIVISION GRUPO DE ACOMPAÑAMIENTO DEPORTIVOS","contacto":"1125298540","moto":true},{"lp":59020,"jerarquia":"OFICIAL","apellido":"BALBUENA","nombre":"MATIAS RAMON ROGELIO","dependencia":"DIVISION GRUPO DE ACOMPAÑAMIENTO DEPORTIVOS","contacto":"3416216276","moto":true},{"lp":59072,"jerarquia":"OFICIAL","apellido":"BUSTO","nombre":"RAMIRO EMILIANO","dependencia":"DIVISION GRUPO DE ACOMPAÑAMIENTO DEPORTIVOS","contacto":"11-67069592","moto":true},{"lp":1120,"jerarquia":"PRINCIPAL","apellido":"HERNÁNDEZ","nombre":"LUCAS ARNAL","dependencia":"DIVISION PLANIFICACION EN EVENTOS DEPORTIVOS","contacto":"22-1400-2771","moto":false},{"lp":8641,"jerarquia":"PRINCIPAL","apellido":"PAGURA","nombre":"NICOLAS ALBERTO","dependencia":"DIVISION PLANIFICACION EN EVENTOS DEPORTIVOS","contacto":"11-3639-0128","moto":false},{"lp":2780,"jerarquia":"PRINCIPAL","apellido":"MARECO","nombre":"VERONICA SANDRA","dependencia":"DIVISION PLANIFICACION EN EVENTOS DEPORTIVOS","contacto":"11-6279-0194","moto":false},{"lp":1280,"jerarquia":"INSPECTOR","apellido":"REYNES","nombre":"ALEJANDRO GABRIEL","dependencia":"DIVISION PLANIFICACION EN EVENTOS DEPORTIVOS","contacto":"11-3158-8420","moto":false},{"lp":71763,"jerarquia":"INSPECTOR","apellido":"REYNO CHAIO","nombre":"MAXIMILIANO NAHUEL","dependencia":"DIVISION PLANIFICACION EN EVENTOS DEPORTIVOS","contacto":"11-22557445","moto":false},{"lp":40737,"jerarquia":"INSPECTOR","apellido":"ROMERO","nombre":"ANDRES IGNACIO","dependencia":"DIVISION PLANIFICACION EN EVENTOS DEPORTIVOS","contacto":"11-5759-8080","moto":false},{"lp":3701,"jerarquia":"OFICIAL MAYOR","apellido":"GONZALEZ","nombre":"SABRINA ELIZABETH","dependencia":"DIVISION PLANIFICACION EN EVENTOS DEPORTIVOS","contacto":"1164811416","moto":false},{"lp":70128,"jerarquia":"OFICIAL MAYOR","apellido":"AYESA","nombre":"MACARENA SOLEDAD","dependencia":"DIVISION PLANIFICACION EN EVENTOS DEPORTIVOS","contacto":"1124662187","moto":false},{"lp":10534,"jerarquia":"OFICIAL MAYOR","apellido":"FERREYRA","nombre":"CLAUDIA SILVANA","dependencia":"DIVISION PLANIFICACION EN EVENTOS DEPORTIVOS","contacto":"1153377667","moto":false},{"lp":11887,"jerarquia":"OFICIAL PRIMERO","apellido":"BERTHON","nombre":"CRISTIAN IVAN","dependencia":"DIVISION PLANIFICACION EN EVENTOS DEPORTIVOS","contacto":"1158597228","moto":false},{"lp":7075,"jerarquia":"OFICIAL PRIMERO","apellido":"FERREYRA ROQUE","nombre":"GABRIEL ARMANDO","dependencia":"DIVISION PLANIFICACION EN EVENTOS DEPORTIVOS","contacto":"1121906719","moto":false},{"lp":74279,"jerarquia":"OFICIAL PRIMERO","apellido":"RIVERO","nombre":"RICARDO NICOLAS","dependencia":"DIVISION PLANIFICACION EN EVENTOS DEPORTIVOS","contacto":"11-4888-7226","moto":false},{"lp":28044,"jerarquia":"OFICIAL PRIMERO","apellido":"MALIE","nombre":"GONZALO DANIEL","dependencia":"DIVISION PLANIFICACION EN EVENTOS DEPORTIVOS","contacto":"1123188826","moto":false},{"lp":29343,"jerarquia":"OFICIAL","apellido":"FRANCIA","nombre":"JENNIFER TAMARA","dependencia":"DIVISION PLANIFICACION EN EVENTOS DEPORTIVOS","contacto":"1157231181","moto":false},{"lp":59227,"jerarquia":"OFICIAL","apellido":"FERNANDEZ","nombre":"KAREN ADELAIDA","dependencia":"DIVISION PLANIFICACION EN EVENTOS DEPORTIVOS","contacto":"1167921277","moto":false},{"lp":6889,"jerarquia":"PRINCIPAL","apellido":"GALARZA","nombre":"GABRIEL ALEJANDRO","dependencia":"DIVISION PLANIFICACION EN ESPECTACULOS PUBLICOS","contacto":"3424 869565","moto":false},{"lp":73389,"jerarquia":"INSPECTOR","apellido":"PEÑA","nombre":"HERNAN JAVIER","dependencia":"DIVISION PLANIFICACION EN ESPECTACULOS PUBLICOS","contacto":"11-3765-0650","moto":false},{"lp":17105,"jerarquia":"OFICIAL PRIMERO","apellido":"LEZCANO","nombre":"JUAN RODOLFO","dependencia":"DIVISION PLANIFICACION EN ESPECTACULOS PUBLICOS","contacto":"1165740078","moto":false},{"lp":16547,"jerarquia":"OFICIAL","apellido":"SOTELO IGLESIA","nombre":"DAIANA ELIZABETH","dependencia":"DIVISION PLANIFICACION EN ESPECTACULOS PUBLICOS","contacto":"1128972223","moto":false},{"lp":59592,"jerarquia":"OFICIAL","apellido":"POSEE","nombre":"DAMIAN DANIEL EZEQUIEL","dependencia":"DIVISION PLANIFICACION EN ESPECTACULOS PUBLICOS","contacto":"1161302967","moto":false},{"lp":2075,"jerarquia":"PRINCIPAL","apellido":"FERREIRO","nombre":"CYNTHIA DANIELA","dependencia":"DIVISION ACOMPAÑAMIENTOS ESPECIALES","contacto":"1166927936","moto":true},{"lp":2067,"jerarquia":"PRINCIPAL","apellido":"IRIARTE","nombre":"DIEGO","dependencia":"DIVISION ACOMPAÑAMIENTOS ESPECIALES","contacto":"1153509804","moto":true},{"lp":4737,"jerarquia":"INSPECTOR","apellido":"RIQUELME","nombre":"CESAR DAVID","dependencia":"DIVISION ACOMPAÑAMIENTOS ESPECIALES","contacto":"1134296357","moto":true},{"lp":6785,"jerarquia":"OFICIAL MAYOR","apellido":"JUAREZ","nombre":"ESTEBAN","dependencia":"DIVISION ACOMPAÑAMIENTOS ESPECIALES","contacto":"1151552896","moto":true},{"lp":41302,"jerarquia":"OFICIAL MAYOR","apellido":"GALEANO","nombre":"ROBERTO OSCAR","dependencia":"DIVISION ACOMPAÑAMIENTOS ESPECIALES","contacto":"1165875405","moto":true},{"lp":9025,"jerarquia":"OFICIAL PRIMERO","apellido":"PLAZA","nombre":"NICOLAS EZEQUIEL","dependencia":"DIVISION ACOMPAÑAMIENTOS ESPECIALES","contacto":"1122717631","moto":true},{"lp":45594,"jerarquia":"OFICIAL","apellido":"BASUALDO","nombre":"ROBERTO","dependencia":"DIVISION ACOMPAÑAMIENTOS ESPECIALES","contacto":"1161027559","moto":true},{"lp":56284,"jerarquia":"OFICIAL","apellido":"GAUNA","nombre":"AXEL EZEQUIEL","dependencia":"DIVISION ACOMPAÑAMIENTOS ESPECIALES","contacto":"11-5513-1310","moto":true},{"lp":22532,"jerarquia":"OFICIAL","apellido":"GIMENEZ DE LUCA","nombre":"SANTIAGO","dependencia":"DIVISION ACOMPAÑAMIENTOS ESPECIALES","contacto":"1167110932","moto":true},{"lp":59188,"jerarquia":"OFICIAL","apellido":"DOMINGUEZ","nombre":"FACUNDO EZEQUIEL","dependencia":"DIVISION ACOMPAÑAMIENTOS ESPECIALES","contacto":"1153172387","moto":true}],"registros":[{"lp":5310,"fecha":"2026-06-04","servicio":"SATURACIÓN COOPERACION SPB - OPERACION MURO","dependencia":"DEPARTAMENTO SEGURIDAD EN EVENTOS DEPORTIVOS","rol":"INFANTERIA"},{"lp":14765,"fecha":"2026-06-04","servicio":"SATURACIÓN COOPERACION SPB - OPERACION MURO","dependencia":"DEPARTAMENTO SEGURIDAD EN ESPECTACULOS PUBLICOS","rol":"INFANTERIA"},{"lp":56284,"fecha":"2026-06-01","servicio":"PREVENCIÓN USO INDEBIDO DEL ESPACIO PÚBLICO","dependencia":"DIVISION ACOMPAÑAMIENTOS ESPECIALES","rol":"INFANTERIA"},{"lp":4737,"fecha":"2026-06-04","servicio":"SATURACIÓN COOPERACION SPB - OPERACION MURO","dependencia":"DIVISION ACOMPAÑAMIENTOS ESPECIALES","rol":"INFANTERIA"},{"lp":41302,"fecha":"2026-06-04","servicio":"SATURACIÓN COOPERACION SPB - OPERACION MURO","dependencia":"DIVISION ACOMPAÑAMIENTOS ESPECIALES","rol":"INFANTERIA"},{"lp":9025,"fecha":"2026-06-04","servicio":"SATURACIÓN COOPERACION SPB - OPERACION MURO","dependencia":"DIVISION ACOMPAÑAMIENTOS ESPECIALES","rol":"INFANTERIA"},{"lp":56284,"fecha":"2026-06-04","servicio":"SATURACIÓN COOPERACION SPB - OPERACION MURO","dependencia":"DIVISION ACOMPAÑAMIENTOS ESPECIALES","rol":"INFANTERIA"},{"lp":56284,"fecha":"2026-06-09","servicio":"SATURACIÓN POR CUADRANTES - COMUNA 1","dependencia":"DIVISION ACOMPAÑAMIENTOS ESPECIALES","rol":"INFANTERIA"},{"lp":41302,"fecha":"2026-06-15","servicio":"PREVENCIÓN USO INDEBIDO DEL ESPACIO PÚBLICO","dependencia":"DIVISION ACOMPAÑAMIENTOS ESPECIALES","rol":"INFANTERIA"},{"lp":4737,"fecha":"2026-06-16","servicio":"FAN FEST - MUNDIAL DE FÚTBOL 2026","dependencia":"DIVISION ACOMPAÑAMIENTOS ESPECIALES","rol":"INFANTERIA"},{"lp":59188,"fecha":"2026-06-19","servicio":"SATURACIÓN POR CUADRANTES - COMUNA 1","dependencia":"DIVISION ACOMPAÑAMIENTOS ESPECIALES","rol":"INFANTERIA"},{"lp":4737,"fecha":"2026-06-25","servicio":"PREVENCIÓN USO INDEBIDO DEL ESPACIO PÚBLICO","dependencia":"DIVISION ACOMPAÑAMIENTOS ESPECIALES","rol":"INFANTERIA"},{"lp":7615,"fecha":"2026-06-01","servicio":"PREVENCIÓN USO INDEBIDO DEL ESPACIO PÚBLICO","dependencia":"DIVISION GRUPO DE ACOMPAÑAMIENTO DEPORTIVOS","rol":"INFANTERIA"},{"lp":14093,"fecha":"2026-06-03","servicio":"SATURACIÓN POR CUADRANTES - COMUNA 1","dependencia":"DIVISION GRUPO DE ACOMPAÑAMIENTO DEPORTIVOS","rol":"INFANTERIA"},{"lp":14447,"fecha":"2026-06-04","servicio":"SATURACIÓN COOPERACION SPB - OPERACION MURO","dependencia":"DIVISION GRUPO DE ACOMPAÑAMIENTO DEPORTIVOS","rol":"INFANTERIA"},{"lp":5748,"fecha":"2026-06-04","servicio":"SATURACIÓN COOPERACION SPB - OPERACION MURO","dependencia":"DIVISION GRUPO DE ACOMPAÑAMIENTO DEPORTIVOS","rol":"INFANTERIA"},{"lp":7615,"fecha":"2026-06-04","servicio":"SATURACIÓN COOPERACION SPB - OPERACION MURO","dependencia":"DIVISION GRUPO DE ACOMPAÑAMIENTO DEPORTIVOS","rol":"INFANTERIA"},{"lp":11323,"fecha":"2026-06-04","servicio":"SATURACIÓN COOPERACION SPB - OPERACION MURO","dependencia":"DIVISION GRUPO DE ACOMPAÑAMIENTO DEPORTIVOS","rol":"INFANTERIA"},{"lp":11872,"fecha":"2026-06-04","servicio":"SATURACIÓN COOPERACION SPB - OPERACION MURO","dependencia":"DIVISION GRUPO DE ACOMPAÑAMIENTO DEPORTIVOS","rol":"INFANTERIA"},{"lp":59072,"fecha":"2026-06-04","servicio":"SATURACIÓN COOPERACION SPB - OPERACION MURO","dependencia":"DIVISION GRUPO DE ACOMPAÑAMIENTO DEPORTIVOS","rol":"INFANTERIA"},{"lp":59072,"fecha":"2026-06-11","servicio":"PREVENCIÓN USO INDEBIDO DEL ESPACIO PÚBLICO","dependencia":"DIVISION GRUPO DE ACOMPAÑAMIENTO DEPORTIVOS","rol":"INFANTERIA"},{"lp":14093,"fecha":"2026-06-16","servicio":"FAN FEST - MUNDIAL DE FÚTBOL 2026","dependencia":"DIVISION GRUPO DE ACOMPAÑAMIENTO DEPORTIVOS","rol":"INFANTERIA"},{"lp":59072,"fecha":"2026-06-19","servicio":"PREVENCIÓN USO INDEBIDO DEL ESPACIO PÚBLICO","dependencia":"DIVISION GRUPO DE ACOMPAÑAMIENTO DEPORTIVOS","rol":"INFANTERIA"},{"lp":28618,"fecha":"2026-06-03","servicio":"SATURACIÓN POR CUADRANTES - COMUNA 1","dependencia":"DIVISION INFORMES PREVENTIVOS","rol":"INFANTERIA"},{"lp":38154,"fecha":"2026-06-04","servicio":"SATURACIÓN COOPERACION SPB - OPERACION MURO","dependencia":"DIVISION INFORMES PREVENTIVOS","rol":"INFANTERIA"},{"lp":46896,"fecha":"2026-06-04","servicio":"SATURACIÓN COOPERACION SPB - OPERACION MURO","dependencia":"DIVISION INFORMES PREVENTIVOS","rol":"INFANTERIA"},{"lp":6538,"fecha":"2026-06-04","servicio":"SATURACIÓN COOPERACION SPB - OPERACION MURO","dependencia":"DIVISION INFORMES PREVENTIVOS","rol":"INFANTERIA"},{"lp":59660,"fecha":"2026-06-04","servicio":"SATURACIÓN COOPERACION SPB - OPERACION MURO","dependencia":"DIVISION INFORMES PREVENTIVOS","rol":"INFANTERIA"},{"lp":28618,"fecha":"2026-06-04","servicio":"SATURACIÓN COOPERACION SPB - OPERACION MURO","dependencia":"DIVISION INFORMES PREVENTIVOS","rol":"INFANTERIA"},{"lp":28618,"fecha":"2026-06-11","servicio":"PREVENCIÓN USO INDEBIDO DEL ESPACIO PÚBLICO","dependencia":"DIVISION INFORMES PREVENTIVOS","rol":"INFANTERIA"},{"lp":6130,"fecha":"2026-06-15","servicio":"PREVENCIÓN USO INDEBIDO DEL ESPACIO PÚBLICO","dependencia":"DIVISION INFORMES PREVENTIVOS","rol":"INFANTERIA"},{"lp":5404,"fecha":"2026-06-16","servicio":"FAN FEST - MUNDIAL DE FÚTBOL 2026","dependencia":"DIVISION INFORMES PREVENTIVOS","rol":"INFANTERIA"},{"lp":6538,"fecha":"2026-06-19","servicio":"SATURACIÓN POR CUADRANTES - COMUNA 1","dependencia":"DIVISION INFORMES PREVENTIVOS","rol":"INFANTERIA"},{"lp":2913,"fecha":"2026-06-04","servicio":"SATURACIÓN COOPERACION SPB - OPERACION MURO","dependencia":"DIVISION ARMERIA Y LOGISTICA","rol":"INFANTERIA"},{"lp":8961,"fecha":"2026-06-04","servicio":"SATURACIÓN COOPERACION SPB - OPERACION MURO","dependencia":"DIVISION ARMERIA Y LOGISTICA","rol":"INFANTERIA"},{"lp":82727,"fecha":"2026-06-04","servicio":"SATURACIÓN COOPERACION SPB - OPERACION MURO","dependencia":"DIVISION ARMERIA Y LOGISTICA","rol":"INFANTERIA"},{"lp":7804,"fecha":"2026-06-04","servicio":"SATURACIÓN COOPERACION SPB - OPERACION MURO","dependencia":"DIVISION ARMERIA Y LOGISTICA","rol":"INFANTERIA"},{"lp":46792,"fecha":"2026-06-04","servicio":"SATURACIÓN COOPERACION SPB - OPERACION MURO","dependencia":"DIVISION ARMERIA Y LOGISTICA","rol":"INFANTERIA"},{"lp":5308,"fecha":"2026-06-05","servicio":"PREVENCIÓN USO INDEBIDO DEL ESPACIO PÚBLICO","dependencia":"DIVISION ARMERIA Y LOGISTICA","rol":"INFANTERIA"},{"lp":3741,"fecha":"2026-06-09","servicio":"SATURACIÓN POR CUADRANTES - COMUNA 1","dependencia":"DIVISION ARMERIA Y LOGISTICA","rol":"INFANTERIA"},{"lp":7063,"fecha":"2026-06-16","servicio":"FAN FEST - MUNDIAL DE FÚTBOL 2026","dependencia":"DIVISION ARMERIA Y LOGISTICA","rol":"INFANTERIA"},{"lp":2281,"fecha":"2026-06-19","servicio":"PREVENCIÓN USO INDEBIDO DEL ESPACIO PÚBLICO","dependencia":"DIVISION ARMERIA Y LOGISTICA","rol":"INFANTERIA"},{"lp":46792,"fecha":"2026-06-25","servicio":"SATURACIÓN POR CUADRANTES - COMUNA 1","dependencia":"DIVISION ARMERIA Y LOGISTICA","rol":"INFANTERIA"},{"lp":40737,"fecha":"2026-06-04","servicio":"SATURACIÓN COOPERACION SPB - OPERACION MURO","dependencia":"DIVISION PLANIFICACION EN EVENTOS DEPORTIVOS","rol":"INFANTERIA"},{"lp":71763,"fecha":"2026-06-04","servicio":"SATURACIÓN COOPERACION SPB - OPERACION MURO","dependencia":"DIVISION PLANIFICACION EN EVENTOS DEPORTIVOS","rol":"INFANTERIA"},{"lp":70128,"fecha":"2026-06-04","servicio":"SATURACIÓN COOPERACION SPB - OPERACION MURO","dependencia":"DIVISION PLANIFICACION EN EVENTOS DEPORTIVOS","rol":"INFANTERIA"},{"lp":7075,"fecha":"2026-06-04","servicio":"SATURACIÓN COOPERACION SPB - OPERACION MURO","dependencia":"DIVISION PLANIFICACION EN EVENTOS DEPORTIVOS","rol":"INFANTERIA"},{"lp":10534,"fecha":"2026-06-04","servicio":"SATURACIÓN COOPERACION SPB - OPERACION MURO","dependencia":"DIVISION PLANIFICACION EN EVENTOS DEPORTIVOS","rol":"INFANTERIA"},{"lp":11887,"fecha":"2026-06-04","servicio":"SATURACIÓN COOPERACION SPB - OPERACION MURO","dependencia":"DIVISION PLANIFICACION EN EVENTOS DEPORTIVOS","rol":"INFANTERIA"},{"lp":28044,"fecha":"2026-06-05","servicio":"PREVENCIÓN USO INDEBIDO DEL ESPACIO PÚBLICO","dependencia":"DIVISION PLANIFICACION EN EVENTOS DEPORTIVOS","rol":"INFANTERIA"},{"lp":74279,"fecha":"2026-06-15","servicio":"SATURACIÓN POR CUADRANTES - COMUNA 1","dependencia":"DIVISION PLANIFICACION EN EVENTOS DEPORTIVOS","rol":"INFANTERIA"},{"lp":74279,"fecha":"2026-06-16","servicio":"FAN FEST - MUNDIAL DE FÚTBOL 2026","dependencia":"DIVISION PLANIFICACION EN EVENTOS DEPORTIVOS","rol":"INFANTERIA"},{"lp":28044,"fecha":"2026-06-25","servicio":"PREVENCIÓN USO INDEBIDO DEL ESPACIO PÚBLICO","dependencia":"DIVISION PLANIFICACION EN EVENTOS DEPORTIVOS","rol":"INFANTERIA"},{"lp":73389,"fecha":"2026-06-04","servicio":"SATURACIÓN COOPERACION SPB - OPERACION MURO","dependencia":"DIVISION PLANIFICACION EN ESPECTACULOS PUBLICOS","rol":"INFANTERIA"},{"lp":73389,"fecha":"2026-06-15","servicio":"SATURACIÓN POR CUADRANTES - COMUNA 1","dependencia":"DIVISION PLANIFICACION EN ESPECTACULOS PUBLICOS","rol":"INFANTERIA"},{"lp":6889,"fecha":"2026-06-25","servicio":"SATURACIÓN POR CUADRANTES - COMUNA 1","dependencia":"DIVISION PLANIFICACION EN ESPECTACULOS PUBLICOS","rol":"INFANTERIA"},{"lp":56284,"fecha":"2026-07-01","servicio":"SATURACIÓN POR CUADRANTES - COMUNA 1","dependencia":"DIVISION ACOMPAÑAMIENTOS ESPECIALES","rol":"INFANTERIA"},{"lp":10290,"fecha":"2026-07-01","servicio":"SATURACIÓN POR CUADRANTES - COMUNA 1","dependencia":"DIVISION INFORMES PREVENTIVOS","rol":"INFANTERIA"},{"lp":7784,"fecha":"2026-07-05","servicio":"SATURACIÓN POR CUADRANTES - COMUNA 1","dependencia":"DIVISION ARMERIA Y LOGISTICA","rol":"INFANTERIA"},{"lp":7075,"fecha":"2026-07-05","servicio":"SATURACIÓN POR CUADRANTES - COMUNA 1","dependencia":"DIVISION PLANIFICACION EN EVENTOS DEPORTIVOS","rol":"INFANTERIA"}],"dependencias":["DEPARTAMENTO SEGURIDAD EN ESPECTACULOS PUBLICOS","DEPARTAMENTO SEGURIDAD EN EVENTOS DEPORTIVOS","DIVISION ACOMPAÑAMIENTOS ESPECIALES","DIVISION ARMERIA Y LOGISTICA","DIVISION GRUPO DE ACOMPAÑAMIENTO DEPORTIVOS","DIVISION INFORMES PREVENTIVOS","DIVISION PLANIFICACION EN ESPECTACULOS PUBLICOS","DIVISION PLANIFICACION EN EVENTOS DEPORTIVOS"]}</script>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, collection, doc, getDoc, setDoc, addDoc, deleteDoc, onSnapshot, writeBatch, query, where, getDocs }
+import { getFirestore, collection, doc, getDoc, setDoc, addDoc, deleteDoc, onSnapshot, writeBatch, getDocs }
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -344,469 +439,496 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-const C_REG = "afect_registros";   // {lp, dependencia, fecha, servicio, rol, ts}
-const C_SVC = "afect_servicios";   // {nombre, requiereMoto, motoMin, motoMax, orden}
-const C_META = "afect_meta";
+const C_REG="afect_registros", C_SVC="afect_servicios", C_META="afect_meta", C_EFF="afect_efectivos";
 
-const SEED = JSON.parse(document.getElementById('seedData').textContent);
-const EFECTIVOS = SEED.efectivos;
-const EFF_BY_LP = {}; EFECTIVOS.forEach(e => EFF_BY_LP[e.lp] = e);
-const DEPS = SEED.dependencias.slice().sort((a,b)=>a.localeCompare(b,'es'));
-const MOTO_DEPS = ["DIVISION ACOMPAÑAMIENTOS ESPECIALES","DIVISION GRUPO DE ACOMPAÑAMIENTO DEPORTIVOS"];
+const SEED=JSON.parse(document.getElementById('seedData').textContent);
+let EFECTIVOS=[], EFF_BY_LP={}, DEPS=[];
+function rebuildRoster(list){
+  EFECTIVOS=list.slice().sort((a,b)=>a.dependencia.localeCompare(b.dependencia,'es')||a.apellido.localeCompare(b.apellido,'es'));
+  EFF_BY_LP={}; EFECTIVOS.forEach(e=>EFF_BY_LP[e.lp]=e);
+  DEPS=[...new Set(EFECTIVOS.map(e=>e.dependencia))].sort((a,b)=>a.localeCompare(b,'es'));
+}
+rebuildRoster(SEED.efectivos); // arranque inmediato; Firestore lo reemplaza al sincronizar
 
-const DEFAULT_SVCS = [
-  {nombre:"SATURACIÓN POR CUADRANTES - COMUNA 1", requiereMoto:false, orden:1},
-  {nombre:"SATURACIÓN POR CUADRANTES", requiereMoto:false, orden:2},
-  {nombre:"SATURACIÓN EN SUBTE", requiereMoto:false, orden:3},
-  {nombre:"SATURACIÓN COOPERACION SPB - OPERACION MURO", requiereMoto:false, orden:4},
-  {nombre:"PREVENCIÓN USO INDEBIDO DEL ESPACIO PÚBLICO", requiereMoto:false, orden:5},
-  {nombre:"FAN FEST - MUNDIAL DE FÚTBOL 2026", requiereMoto:false, orden:6},
-  {nombre:"MOVISTAR ARENA", requiereMoto:true, motoMin:2, motoMax:4, orden:7},
+const MOTO_DEPS=["DIVISION ACOMPAÑAMIENTOS ESPECIALES","DIVISION GRUPO DE ACOMPAÑAMIENTO DEPORTIVOS"];
+function depHasMoto(dep){ return EFECTIVOS.some(e=>e.dependencia===dep && e.moto); }
+const DEFAULT_SVCS=[
+  {nombre:"SATURACIÓN POR CUADRANTES - COMUNA 1",requiereMoto:false,orden:1},
+  {nombre:"SATURACIÓN POR CUADRANTES",requiereMoto:false,orden:2},
+  {nombre:"SATURACIÓN EN SUBTE",requiereMoto:false,orden:3},
+  {nombre:"SATURACIÓN COOPERACION SPB - OPERACION MURO",requiereMoto:false,orden:4},
+  {nombre:"PREVENCIÓN USO INDEBIDO DEL ESPACIO PÚBLICO",requiereMoto:false,orden:5},
+  {nombre:"FAN FEST - MUNDIAL DE FÚTBOL 2026",requiereMoto:false,orden:6},
+  {nombre:"MOVISTAR ARENA",requiereMoto:true,motoMin:2,motoMax:4,orden:7},
 ];
 
-let REGISTROS = [];      // live from firestore
-let SERVICIOS = [];      // live from firestore
-let state = { boardDate: todayStr(), cargarDate: todayStr(), cargarRol:"INFANTERIA", selService:null };
+let REGISTROS=[], SERVICIOS=[];
+let state={boardDate:todayStr(),cargarDate:todayStr(),cargarRol:"INFANTERIA",openDep:null,weekStart:weekStartOf(todayStr()),editingLP:null};
 
-/* ---------- helpers ---------- */
-function todayStr(){ const d=new Date(); return d.toISOString().slice(0,10); }
-function fmtDate(s){ const [y,m,d]=s.split('-'); return `${d}/${m}/${y}`; }
-function esc(s){ return (s==null?'':String(s)).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
-function depShort(d){ return d.replace(/^DIVISION /,'Div. ').replace(/^DEPARTAMENTO /,'Depto. ').replace(/ACOMPAÑAMIENTO/,'Acompañam.'); }
-function svcByName(n){ return SERVICIOS.find(s=>s.nombre===n); }
-function svcMoto(n){ const s=svcByName(n); return !!(s&&s.requiereMoto); }
-function fullName(e){ return `${e.apellido}, ${e.nombre}`; }
+function todayStr(){return new Date().toISOString().slice(0,10)}
+function addDays(s,n){const d=new Date(s+'T12:00');d.setDate(d.getDate()+n);return d.toISOString().slice(0,10)}
+function weekStartOf(s){const d=new Date(s+'T12:00');const wd=(d.getDay()+6)%7;d.setDate(d.getDate()-wd);return d.toISOString().slice(0,10)} // lunes
+function fmtDate(s){const[y,m,d]=s.split('-');return `${d}/${m}/${y}`}
+function esc(s){return(s==null?'':String(s)).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+function depShort(d){return d.replace(/^DIVISION /,'Div. ').replace(/^DEPARTAMENTO /,'Depto. ').replace(/ACOMPAÑAMIENTO/,'Acompañam.')}
+function svcByName(n){return SERVICIOS.find(s=>s.nombre===n)}
+function svcMoto(n){const s=svcByName(n);return !!(s&&s.requiereMoto)}
+function fullName(e){return `${e.apellido}, ${e.nombre}`}
+const $=s=>document.querySelector(s);
+const connDot=$('#connDot'),connTxt=$('#connTxt');
+function setConn(st){connDot.className='dot '+(st==='on'?'on':st==='err'?'err':'');connTxt.textContent=st==='on'?'en línea':st==='err'?'sin conexión':'conectando'}
 
-const $ = s => document.querySelector(s);
-const connDot=$('#connDot'), connTxt=$('#connTxt');
-function setConn(st){ connDot.className='dot '+(st==='on'?'on':st==='err'?'err':''); connTxt.textContent = st==='on'?'en línea':st==='err'?'sin conexión':'conectando'; }
+/* month-load: cuántos servicios hizo cada LP en el mes de una fecha */
+function monthOf(d){return d.slice(0,7)}
+function loadByLP(ym){
+  const m={};
+  REGISTROS.forEach(r=>{ if(r.fecha.startsWith(ym)) m[r.lp]=(m[r.lp]||0)+1; });
+  return m;
+}
 
-/* ---------- seeding (one-time) ---------- */
 async function ensureSeed(){
-  // services
-  const svcSnap = await getDocs(collection(db,C_SVC));
+  const svcSnap=await getDocs(collection(db,C_SVC));
   if(svcSnap.empty){
     const batch=writeBatch(db);
-    DEFAULT_SVCS.forEach(s=>{ const ref=doc(collection(db,C_SVC)); batch.set(ref,{motoMin:2,motoMax:4,...s}); });
+    DEFAULT_SVCS.forEach(s=>{const ref=doc(collection(db,C_SVC));batch.set(ref,{motoMin:2,motoMax:4,...s})});
     await batch.commit();
   }
-  // registros (gate with meta flag)
-  const metaRef = doc(db,C_META,"seed_junio");
-  const metaSnap = await getDoc(metaRef);
-  if(!metaSnap.exists()){
-    const regSnap = await getDocs(collection(db,C_REG));
-    if(regSnap.empty){
-      // commit in chunks of <=450
-      let chunk=[]; const all=SEED.registros.slice();
+  // efectivos (nómina editable)
+  const effMeta=doc(db,C_META,"seed_efectivos");
+  if(!(await getDoc(effMeta)).exists()){
+    const effSnap=await getDocs(collection(db,C_EFF));
+    if(effSnap.empty){
+      const all=SEED.efectivos.slice();
       while(all.length){
         const batch=writeBatch(db);
-        all.splice(0,400).forEach(r=>{
-          const ref=doc(collection(db,C_REG));
-          batch.set(ref,{lp:r.lp, dependencia:r.dependencia, fecha:r.fecha, servicio:r.servicio, rol:r.rol||"INFANTERIA", ts:Date.now()});
-        });
+        all.splice(0,400).forEach(e=>{batch.set(doc(db,C_EFF,String(e.lp)),{lp:e.lp,jerarquia:e.jerarquia,apellido:e.apellido,nombre:e.nombre,dependencia:e.dependencia,contacto:e.contacto||'',moto:!!e.moto})});
         await batch.commit();
       }
     }
-    await setDoc(metaRef,{done:true, at:Date.now()});
+    await setDoc(effMeta,{done:true,at:Date.now()});
+  }
+  const metaRef=doc(db,C_META,"seed_junio");
+  if(!(await getDoc(metaRef)).exists()){
+    const regSnap=await getDocs(collection(db,C_REG));
+    if(regSnap.empty){
+      const all=SEED.registros.slice();
+      while(all.length){
+        const batch=writeBatch(db);
+        all.splice(0,400).forEach(r=>{const ref=doc(collection(db,C_REG));batch.set(ref,{lp:r.lp,dependencia:r.dependencia,fecha:r.fecha,servicio:r.servicio,rol:r.rol||"INFANTERIA",ts:Date.now()})});
+        await batch.commit();
+      }
+    }
+    await setDoc(metaRef,{done:true,at:Date.now()});
   }
 }
 
-/* ---------- live listeners ---------- */
 function listen(){
-  onSnapshot(collection(db,C_REG), snap=>{
-    REGISTROS = snap.docs.map(d=>({id:d.id,...d.data()}));
-    setConn('on');
-    renderAll();
-  }, err=>{ console.error(err); setConn('err'); });
-
-  onSnapshot(collection(db,C_SVC), snap=>{
-    SERVICIOS = snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(a.orden||99)-(b.orden||99)||a.nombre.localeCompare(b.nombre));
-    renderServiceSelectors();
-    renderSvcManage();
-    renderAll();
-  }, err=>console.error(err));
+  onSnapshot(collection(db,C_EFF),snap=>{
+    if(!snap.empty){ rebuildRoster(snap.docs.map(d=>d.data())); }
+    renderRoster(); refreshDatalists(); renderAll();
+  },e=>console.error(e));
+  onSnapshot(collection(db,C_REG),snap=>{REGISTROS=snap.docs.map(d=>({id:d.id,...d.data()}));setConn('on');renderAll();},e=>{console.error(e);setConn('err')});
+  onSnapshot(collection(db,C_SVC),snap=>{SERVICIOS=snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(a.orden||99)-(b.orden||99)||a.nombre.localeCompare(b.nombre));renderServiceSelectors();renderSvcManage();renderAll();},e=>console.error(e));
 }
 
-/* ===================== TABLERO ===================== */
-function regsOn(date){ return REGISTROS.filter(r=>r.fecha===date); }
-function affectedLPsOn(date){ return new Set(regsOn(date).map(r=>r.lp)); }
+/* TABLERO */
+function regsOn(d){return REGISTROS.filter(r=>r.fecha===d)}
+function affectedLPsOn(d){return new Set(regsOn(d).map(r=>r.lp))}
 
 function renderBoard(){
-  const date=state.boardDate;
-  const regs=regsOn(date);
+  const date=state.boardDate, regs=regsOn(date);
   $('#boardDate').value=date;
-  // group by service
-  const byS={};
-  regs.forEach(r=>{ (byS[r.servicio]=byS[r.servicio]||[]).push(r); });
-  const order = SERVICIOS.map(s=>s.nombre).concat(Object.keys(byS).filter(n=>!svcByName(n)));
-  const services = order.filter(n=>byS[n]);
-
+  const byS={}; regs.forEach(r=>{(byS[r.servicio]=byS[r.servicio]||[]).push(r)});
+  const order=SERVICIOS.map(s=>s.nombre).concat(Object.keys(byS).filter(n=>!svcByName(n)));
+  const services=order.filter(n=>byS[n]);
   const cont=$('#boardServices'); cont.innerHTML='';
-  if(services.length===0){
-    cont.innerHTML=`<div class="panel"><div class="empty"><svg viewBox="0 0 24 24" fill="none"><path d="M3 7h18M3 12h18M3 17h18" stroke="currentColor" stroke-width="1.5"/></svg><br>Sin afectaciones cargadas para el ${fmtDate(date)}.<br><span style="font-size:12px">Cargá efectivos desde la pestaña <b>Cargar</b>.</span></div></div>`;
-  }
+  if(services.length===0)
+    cont.innerHTML=`<div class="panel"><div class="empty"><svg viewBox="0 0 24 24" fill="none"><path d="M3 7h18M3 12h18M3 17h18" stroke="currentColor" stroke-width="1.5"/></svg><br>Sin afectaciones cargadas para el ${fmtDate(date)}.<br><span style="font-size:12px">Cargá efectivos desde <b>Cargar</b> o desde el sugeridor →</span></div></div>`;
   let motoCount=0;
   services.forEach(svc=>{
     const list=byS[svc].slice().sort((a,b)=>a.dependencia.localeCompare(b.dependencia)||a.lp-b.lp);
-    const hasMoto=svcMoto(svc);
-    const motosHere=list.filter(r=>r.rol==='MOTO').length; motoCount+=motosHere;
+    const hasMoto=svcMoto(svc); const motosHere=list.filter(r=>r.rol==='MOTO').length; motoCount+=motosHere;
     const block=document.createElement('div'); block.className='svc-block';
-    block.innerHTML=`
-      <div class="svc-head ${hasMoto?'has-moto':''}">
-        <span class="nm">${esc(svc)}</span>
-        ${hasMoto?`<span class="chip moto">🏍 ${motosHere} moto${motosHere!==1?'s':''}</span>`:''}
-        <span class="ct">${list.length}</span>
-      </div>
-      <div class="eff-list">
-        ${list.map(r=>{ const e=EFF_BY_LP[r.lp]||{apellido:'?',nombre:'',jerarquia:'',dependencia:r.dependencia};
-          return `<div class="eff">
-            <span class="lp">${r.lp}</span>
-            ${r.rol==='MOTO'?'<span class="chip moto">🏍</span>':''}
-            <span><span class="nom">${esc(fullName(e))}</span> <span class="jer">· ${esc(e.jerarquia)}</span></span>
-            <span class="dep">${esc(depShort(r.dependencia))}</span>
-            <button class="x" data-del="${r.id}" title="Quitar">✕</button>
-          </div>`;}).join('')}
-      </div>`;
+    block.innerHTML=`<div class="svc-head ${hasMoto?'has-moto':''}"><span class="nm">${esc(svc)}</span>${hasMoto?`<span class="chip moto">🏍 ${motosHere} moto${motosHere!==1?'s':''}</span>`:''}<span class="ct">${list.length}</span></div>
+      <div class="eff-list">${list.map(r=>{const e=EFF_BY_LP[r.lp]||{apellido:'?',nombre:'',jerarquia:'',dependencia:r.dependencia};
+        return `<div class="eff"><span class="lp">${r.lp}</span>${r.rol==='MOTO'?'<span class="chip moto">🏍</span>':''}<span><span class="nom">${esc(fullName(e))}</span> <span class="jer">· ${esc(e.jerarquia)}</span></span><span class="dep">${esc(depShort(r.dependencia))}</span><button class="x" data-del="${r.id}" title="Quitar">✕</button></div>`}).join('')}</div>`;
     cont.appendChild(block);
   });
-
-  // KPIs
-  $('#kpiTotal').textContent=regs.length;
-  $('#kpiServ').textContent=services.length;
-  $('#kpiMoto').textContent=motoCount;
-  $('#kpiDisp').textContent=EFECTIVOS.length - affectedLPsOn(date).size;
-
+  $('#kpiTotal').textContent=regs.length; $('#kpiServ').textContent=services.length;
+  $('#kpiMoto').textContent=motoCount; $('#kpiDisp').textContent=EFECTIVOS.length-affectedLPsOn(date).size;
   cont.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>delReg(b.dataset.del));
 }
 
 function renderSuggester(){
-  const sel=$('#sugService'); const svc=sel.value;
-  const date=state.boardDate;
-  const affected=affectedLPsOn(date);
-  const requiresMoto=svcMoto(svc);
-  // available per dependencia
+  const svc=$('#sugService').value, date=state.boardDate;
+  const affected=affectedLPsOn(date), requiresMoto=svcMoto(svc);
+  const load=loadByLP(monthOf(date));
   const rows=DEPS.map(dep=>{
     const inDep=EFECTIVOS.filter(e=>e.dependencia===dep);
-    const avail=inDep.filter(e=>!affected.has(e.lp));
+    let avail=inDep.filter(e=>!affected.has(e.lp));
+    // ordenar por menos servicios en el mes (rotación), luego por LP
+    avail.sort((a,b)=>(load[a.lp]||0)-(load[b.lp]||0)||a.lp-b.lp);
     const motoAvail=avail.filter(e=>e.moto).length;
-    return {dep, total:inDep.length, avail:avail.length, motoAvail, isMotoDep:MOTO_DEPS.includes(dep)};
-  }).sort((a,b)=>b.avail-a.avail);
-
-  const maxAvail=Math.max(1,...rows.map(r=>r.total));
+    return {dep,total:inDep.length,avail,n:avail.length,motoAvail,isMotoDep:depHasMoto(dep)};
+  }).sort((a,b)=>b.n-a.n);
+  const maxT=Math.max(1,...rows.map(r=>r.total));
   const cont=$('#depRank');
   cont.innerHTML=rows.map(r=>{
-    const showMoto = requiresMoto && r.isMotoDep;
-    return `<div class="dep-row ${r.avail===0?'zero':''} ${showMoto?'moto-cap':''}">
-      <div class="dep-bar">
-        <div class="dep-nm">${esc(depShort(r.dep))}</div>
-        <div class="bar"><i style="width:${Math.round(r.avail/maxAvail*100)}%"></i></div>
+    const showMoto=requiresMoto&&r.isMotoDep, open=state.openDep===r.dep;
+    const effRows=r.avail.map(e=>{
+      const l=load[e.lp]||0;
+      const cls=l===0?'load-0':l<=2?'load-mid':'load-hi';
+      const canMoto=requiresMoto&&e.moto;
+      return `<div class="de-row">
+        <span class="de-lp">${e.lp}</span>
+        <span class="de-nm">${esc(fullName(e))}${e.moto?' <span class="r-moto">🏍</span>':''}</span>
+        <span class="de-load ${cls}">${l} serv</span>
+        <button class="de-add" data-add="${e.lp}" data-rol="INFANTERIA">＋ Inf</button>
+        ${canMoto?`<button class="de-add moto" data-add="${e.lp}" data-rol="MOTO">＋🏍</button>`:''}
+      </div>`;
+    }).join('') || `<div class="de-empty">Sin efectivos disponibles.</div>`;
+    return `<div class="dep-row ${r.n===0?'zero':''} ${showMoto?'moto-cap':''} ${open?'open':''}">
+      <div class="dep-head" data-dep="${esc(r.dep)}">
+        <span class="caret">▶</span>
+        <div class="dep-bar"><div class="dep-nm">${esc(depShort(r.dep))}</div><div class="bar"><i style="width:${Math.round(r.n/maxT*100)}%"></i></div></div>
+        <div class="dep-n ${showMoto?'moto':''}"><b>${r.n}</b><span class="of">de ${r.total}</span>${showMoto?`<span class="of" style="color:var(--moto)">🏍 ${r.motoAvail}</span>`:''}</div>
       </div>
-      <div class="dep-n ${showMoto?'moto':''}">
-        <b>${r.avail}</b><span class="of">de ${r.total}</span>
-        ${showMoto?`<span class="of" style="color:var(--moto)">🏍 ${r.motoAvail} moto</span>`:''}
-      </div>
+      <div class="dep-eff">${effRows}</div>
     </div>`;
   }).join('');
-
-  // hint
-  let hint=`Disponibles = no afectados a ningún servicio el <b style="color:var(--ink2)">${fmtDate(date)}</b>.`;
+  // toggle expand
+  cont.querySelectorAll('.dep-head').forEach(h=>h.onclick=()=>{
+    const d=h.dataset.dep; state.openDep=state.openDep===d?null:d; renderSuggester();
+  });
+  // quick add
+  cont.querySelectorAll('[data-add]').forEach(b=>b.onclick=ev=>{
+    ev.stopPropagation();
+    quickAfectar(+b.dataset.add, svc, b.dataset.rol, date);
+  });
+  let hint=`Disponibles = no afectados ningún servicio el <b>${fmtDate(date)}</b>. Dentro de cada dependencia, ordenados por <b>quién hizo menos servicios en el mes</b> (rotación). Tocá una dependencia para ver y afectar.`;
   if(requiresMoto){
-    const totalMoto=rows.filter(r=>r.isMotoDep).reduce((a,r)=>a+r.motoAvail,0);
-    const s=svcByName(svc);
-    hint+=`<br><br><b>Motos:</b> este servicio pide de ${s?.motoMin||2} a ${s?.motoMax||4}. Hay <b>${totalMoto}</b> efectivos con moto disponibles entre las dos divisiones habilitadas.`;
+    const tm=rows.filter(r=>r.isMotoDep).reduce((a,r)=>a+r.motoAvail,0), s=svcByName(svc);
+    hint+=`<br><br><b>Motos:</b> pide de ${s?.motoMin||2} a ${s?.motoMax||4}. Hay <b>${tm}</b> con moto disponibles.`;
   }
   $('#sugHint').innerHTML=hint;
 }
+async function quickAfectar(lp,svc,rol,date){
+  const e=EFF_BY_LP[lp]; if(!e||!svc) return;
+  if(affectedLPsOn(date).has(lp)) return;
+  if(rol==='MOTO'&&!e.moto) return;
+  try{
+    await addDoc(collection(db,C_REG),{lp,dependencia:e.dependencia,fecha:date,servicio:svc,rol,ts:Date.now()});
+  }catch(err){console.error(err)}
+}
+function renderBoardAndSug(){renderBoard();renderSuggester()}
 
-function renderBoardAndSug(){ renderBoard(); renderSuggester(); }
-
-/* ===================== CARGAR ===================== */
-let searchHL=-1, searchResults=[];
+/* CARGAR */
+let searchHL=-1,searchResults=[];
 function renderServiceSelectors(){
   const opts=SERVICIOS.map(s=>`<option value="${esc(s.nombre)}">${esc(s.nombre)}</option>`).join('');
-  ['#sugService','#cargarService'].forEach(id=>{
-    const el=$(id); const prev=el.value;
-    el.innerHTML=opts;
-    if(prev && SERVICIOS.some(s=>s.nombre===prev)) el.value=prev;
-  });
+  ['#sugService','#cargarService'].forEach(id=>{const el=$(id);const prev=el.value;el.innerHTML=opts;if(prev&&SERVICIOS.some(s=>s.nombre===prev))el.value=prev});
   updateRolField();
 }
-function updateRolField(){
-  const svc=$('#cargarService').value;
-  const isMoto=svcMoto(svc);
-  $('#rolFld').style.display=isMoto?'block':'none';
-  if(!isMoto){ state.cargarRol='INFANTERIA'; }
-  updateMotoCounter();
-}
+function updateRolField(){const svc=$('#cargarService').value,isMoto=svcMoto(svc);$('#rolFld').style.display=isMoto?'block':'none';if(!isMoto)state.cargarRol='INFANTERIA';updateMotoCounter()}
 function updateMotoCounter(){
   const svc=$('#cargarService').value;
-  if(!svcMoto(svc)){ $('#motoCounter').textContent=''; return; }
-  const s=svcByName(svc);
-  const n=REGISTROS.filter(r=>r.fecha===state.cargarDate && r.servicio===svc && r.rol==='MOTO').length;
-  const min=s?.motoMin||2, max=s?.motoMax||4;
-  let col = n<min?'var(--warn)': n<=max?'var(--good)':'var(--bad)';
+  if(!svcMoto(svc)){$('#motoCounter').textContent='';return}
+  const s=svcByName(svc),n=REGISTROS.filter(r=>r.fecha===state.cargarDate&&r.servicio===svc&&r.rol==='MOTO').length;
+  const min=s?.motoMin||2,max=s?.motoMax||4,col=n<min?'var(--warn)':n<=max?'var(--good)':'var(--bad)';
   $('#motoCounter').innerHTML=`Motos cargadas hoy: <b style="color:${col}">${n}</b> / pedido ${min}–${max}`;
 }
-
-function setRol(rol){
-  state.cargarRol=rol;
-  $('#rolInf').className='rol-opt'+(rol==='INFANTERIA'?' sel-inf':'');
-  $('#rolMoto').className='rol-opt'+(rol==='MOTO'?' sel-moto':'');
-  doSearch($('#effSearch').value);
-}
-
+function setRol(rol){state.cargarRol=rol;$('#rolInf').className='rol-opt'+(rol==='INFANTERIA'?' sel-inf':'');$('#rolMoto').className='rol-opt'+(rol==='MOTO'?' sel-moto':'');doSearch($('#effSearch').value)}
 function doSearch(qstr){
-  const box=$('#effResults');
-  const q=qstr.trim().toLowerCase();
-  if(!q){ box.style.display='none'; return; }
-  const svc=$('#cargarService').value;
-  const needMoto = svcMoto(svc) && state.cargarRol==='MOTO';
-  const affected=affectedLPsOn(state.cargarDate);
-  let pool=EFECTIVOS;
-  if(needMoto) pool=pool.filter(e=>e.moto);
-  searchResults=pool.filter(e=>{
-    return String(e.lp).includes(q) || e.apellido.toLowerCase().includes(q) || e.nombre.toLowerCase().includes(q);
-  }).slice(0,40);
+  const box=$('#effResults'),q=qstr.trim().toLowerCase();
+  if(!q){box.style.display='none';return}
+  const svc=$('#cargarService').value,needMoto=svcMoto(svc)&&state.cargarRol==='MOTO';
+  const affected=affectedLPsOn(state.cargarDate),load=loadByLP(monthOf(state.cargarDate));
+  let pool=EFECTIVOS; if(needMoto)pool=pool.filter(e=>e.moto);
+  searchResults=pool.filter(e=>String(e.lp).includes(q)||e.apellido.toLowerCase().includes(q)||e.nombre.toLowerCase().includes(q))
+    .sort((a,b)=>(load[a.lp]||0)-(load[b.lp]||0)||a.lp-b.lp).slice(0,40);
   searchHL=-1;
-  if(searchResults.length===0){
-    box.innerHTML=`<div class="res-item" style="cursor:default;opacity:.6">Sin resultados${needMoto?' (sólo divisiones con moto)':''}</div>`;
-    box.style.display='block'; return;
-  }
-  box.innerHTML=searchResults.map((e,i)=>{
-    const busy=affected.has(e.lp);
-    return `<div class="res-item ${busy?'busy':''}" data-i="${i}">
-      <span class="r-lp">${e.lp}</span>
-      ${e.moto?'<span class="r-moto">🏍</span>':''}
-      <span class="r-nm">${esc(fullName(e))}</span>
-      <span class="r-dep">${esc(depShort(e.dependencia))}${busy?' · ya afectado':''}</span>
-    </div>`;
-  }).join('');
+  if(searchResults.length===0){box.innerHTML=`<div class="res-item" style="cursor:default;opacity:.6">Sin resultados${needMoto?' (sólo divisiones con moto)':''}</div>`;box.style.display='block';return}
+  box.innerHTML=searchResults.map((e,i)=>{const busy=affected.has(e.lp),l=load[e.lp]||0;
+    return `<div class="res-item ${busy?'busy':''}" data-i="${i}"><span class="r-lp">${e.lp}</span>${e.moto?'<span class="r-moto">🏍</span>':''}<span class="r-nm">${esc(fullName(e))}</span><span class="r-load">${l} serv</span><span class="r-dep">${esc(depShort(e.dependencia))}${busy?' · ya afectado':''}</span></div>`}).join('');
   box.style.display='block';
-  box.querySelectorAll('.res-item[data-i]').forEach(el=>{
-    el.onclick=()=>pickEff(searchResults[+el.dataset.i]);
-  });
+  box.querySelectorAll('.res-item[data-i]').forEach(el=>el.onclick=()=>pickEff(searchResults[+el.dataset.i]));
 }
-
 async function pickEff(e){
   const svc=$('#cargarService').value;
-  if(!svc){ banner('err','Elegí un servicio primero.'); return; }
-  const affected=affectedLPsOn(state.cargarDate);
-  if(affected.has(e.lp)){ banner('err',`${fullName(e)} ya está afectado el ${fmtDate(state.cargarDate)}.`); return; }
-  const rol = svcMoto(svc)? state.cargarRol : 'INFANTERIA';
-  if(rol==='MOTO' && !e.moto){ banner('err',`${fullName(e)} no pertenece a una división con moto.`); return; }
-  $('#effSearch').value=''; $('#effResults').style.display='none';
-  try{
-    await addDoc(collection(db,C_REG),{lp:e.lp, dependencia:e.dependencia, fecha:state.cargarDate, servicio:svc, rol, ts:Date.now()});
-    banner('ok',`${esc(fullName(e))} afectado a ${esc(svc)}${rol==='MOTO'?' (moto)':''}.`);
-  }catch(err){ console.error(err); banner('err','No se pudo guardar. Revisá la conexión.'); }
+  if(!svc){banner('err','Elegí un servicio primero.');return}
+  if(affectedLPsOn(state.cargarDate).has(e.lp)){banner('err',`${fullName(e)} ya está afectado el ${fmtDate(state.cargarDate)}.`);return}
+  const rol=svcMoto(svc)?state.cargarRol:'INFANTERIA';
+  if(rol==='MOTO'&&!e.moto){banner('err',`${fullName(e)} no pertenece a una división con moto.`);return}
+  $('#effSearch').value='';$('#effResults').style.display='none';
+  try{await addDoc(collection(db,C_REG),{lp:e.lp,dependencia:e.dependencia,fecha:state.cargarDate,servicio:svc,rol,ts:Date.now()});banner('ok',`${esc(fullName(e))} afectado a ${esc(svc)}${rol==='MOTO'?' (moto)':''}.`)}
+  catch(err){console.error(err);banner('err','No se pudo guardar. Revisá la conexión.')}
 }
-
 function renderAdded(){
   $('#cargarDateLbl').textContent=fmtDate(state.cargarDate);
-  const regs=REGISTROS.filter(r=>r.fecha===state.cargarDate)
-    .sort((a,b)=>(b.ts||0)-(a.ts||0));
+  const regs=REGISTROS.filter(r=>r.fecha===state.cargarDate).sort((a,b)=>(b.ts||0)-(a.ts||0));
   const cont=$('#addedList');
-  if(regs.length===0){ cont.innerHTML=`<div class="empty" style="padding:30px">Todavía no cargaste a nadie para este día.</div>`; return; }
-  cont.innerHTML=regs.map(r=>{
-    const e=EFF_BY_LP[r.lp]||{apellido:'?',nombre:'',jerarquia:''};
-    return `<div class="added-row">
-      <span class="lp mono" style="color:var(--accent);font-weight:700;min-width:54px">${r.lp}</span>
-      ${r.rol==='MOTO'?'<span class="chip moto">🏍 Moto</span>':'<span class="chip inf">Inf.</span>'}
-      <span><b style="font-size:13px">${esc(fullName(e))}</b><br><span class="muted" style="font-size:11px">${esc(r.servicio)}</span></span>
-      <button class="x btn danger sm" data-del="${r.id}">Quitar</button>
-    </div>`;
-  }).join('');
+  if(regs.length===0){cont.innerHTML=`<div class="empty" style="padding:30px">Todavía no cargaste a nadie para este día.</div>`;return}
+  cont.innerHTML=regs.map(r=>{const e=EFF_BY_LP[r.lp]||{apellido:'?',nombre:'',jerarquia:''};
+    return `<div class="added-row"><span class="lp mono" style="color:var(--accent);font-weight:700;min-width:54px">${r.lp}</span>${r.rol==='MOTO'?'<span class="chip moto">🏍 Moto</span>':'<span class="chip inf">Inf.</span>'}<span><b style="font-size:13px">${esc(fullName(e))}</b><br><span class="muted" style="font-size:11px">${esc(r.servicio)}</span></span><button class="btn danger sm" data-del="${r.id}" style="margin-left:auto">Quitar</button></div>`}).join('');
   cont.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>delReg(b.dataset.del));
 }
-
-async function delReg(id){
-  try{ await deleteDoc(doc(db,C_REG,id)); }
-  catch(err){ console.error(err); banner('err','No se pudo eliminar.'); }
-}
-
+async function delReg(id){try{await deleteDoc(doc(db,C_REG,id))}catch(err){console.error(err);banner('err','No se pudo eliminar.')}}
 let bannerT;
-function banner(type,msg){
-  const b=$('#cargarBanner'); b.className=`banner show ${type}`;
-  b.innerHTML=(type==='ok'?'✓ ':'⚠ ')+msg;
-  clearTimeout(bannerT); bannerT=setTimeout(()=>b.className='banner',3500);
-}
+function banner(type,msg){const b=$('#cargarBanner');b.className=`banner show ${type}`;b.innerHTML=(type==='ok'?'✓ ':'⚠ ')+msg;clearTimeout(bannerT);bannerT=setTimeout(()=>b.className='banner',3500)}
 
-/* ===================== MENSUAL ===================== */
+/* MENSUAL */
 function monthData(ym){
-  const [y,m]=ym.split('-').map(Number);
-  const days=new Date(y,m,0).getDate();
+  const[y,m]=ym.split('-').map(Number),days=new Date(y,m,0).getDate();
   const grid={}; DEPS.forEach(d=>grid[d]=Array.from({length:days+1},()=>({n:0,moto:0})));
-  REGISTROS.forEach(r=>{
-    if(!r.fecha.startsWith(ym)) return;
-    const day=Number(r.fecha.slice(8,10));
-    if(!grid[r.dependencia]) return;
-    grid[r.dependencia][day].n++;
-    if(r.rol==='MOTO') grid[r.dependencia][day].moto++;
-  });
-  return {grid,days,y,m};
+  REGISTROS.forEach(r=>{if(!r.fecha.startsWith(ym))return;const day=Number(r.fecha.slice(8,10));if(!grid[r.dependencia])return;grid[r.dependencia][day].n++;if(r.rol==='MOTO')grid[r.dependencia][day].moto++});
+  return{grid,days,y,m};
 }
 function renderMonth(){
-  const ym=$('#monthPick').value || todayStr().slice(0,7);
-  $('#monthPick').value=ym;
-  const {grid,days,y,m}=monthData(ym);
+  const ym=$('#monthPick').value||todayStr().slice(0,7); $('#monthPick').value=ym;
+  const{grid,days,y,m}=monthData(ym);
   let head='<tr><th class="dep-cell">Dependencia</th>';
-  for(let d=1;d<=days;d++){ const wd=new Date(y,m-1,d).getDay(); head+=`<th class="${wd===0||wd===6?'wknd':''}">${d}</th>`; }
+  for(let d=1;d<=days;d++){const wd=new Date(y,m-1,d).getDay();head+=`<th class="${wd===0||wd===6?'wknd':''}">${d}</th>`}
   head+='<th>Σ</th></tr>';
-  let body='';
-  const colTot=Array.from({length:days+2},()=>0);
-  DEPS.forEach(dep=>{
-    let row=`<tr><td class="dep-cell">${esc(dep)}</td>`; let rowTot=0;
-    for(let d=1;d<=days;d++){
-      const c=grid[dep][d]; const wd=new Date(y,m-1,d).getDay(); const we=wd===0||wd===6;
-      if(c.n>0){ row+=`<td class="${we?'wknd':''}"><span class="cv ${c.moto>0?'moto':'has'}">${c.n}${c.moto>0?'·'+c.moto+'🏍':''}</span></td>`; rowTot+=c.n; colTot[d]+=c.n; }
-      else row+=`<td class="${we?'wknd':''}"></td>`;
-    }
-    row+=`<td><b>${rowTot}</b></td></tr>`; colTot[days+1]+=rowTot;
-    body+=row;
-  });
+  let body='';const colTot=Array.from({length:days+2},()=>0);
+  DEPS.forEach(dep=>{let row=`<tr><td class="dep-cell">${esc(dep)}</td>`,rowTot=0;
+    for(let d=1;d<=days;d++){const c=grid[dep][d],wd=new Date(y,m-1,d).getDay(),we=wd===0||wd===6;
+      if(c.n>0){row+=`<td class="${we?'wknd':''}"><span class="cv ${c.moto>0?'moto':'has'}">${c.n}${c.moto>0?'·'+c.moto+'🏍':''}</span></td>`;rowTot+=c.n;colTot[d]+=c.n}
+      else row+=`<td class="${we?'wknd':''}"></td>`}
+    row+=`<td><b>${rowTot}</b></td></tr>`;colTot[days+1]+=rowTot;body+=row});
   let tot='<tr class="tot"><td class="tot-cell">TOTAL</td>';
-  for(let d=1;d<=days;d++) tot+=`<td>${colTot[d]||''}</td>`;
+  for(let d=1;d<=days;d++)tot+=`<td>${colTot[d]||''}</td>`;
   tot+=`<td>${colTot[days+1]}</td></tr>`;
   $('#monthTable').innerHTML=`<table class="grid"><thead>${head}</thead><tbody>${body}${tot}</tbody></table>`;
 }
-
 async function exportExcel(){
-  const ym=$('#monthPick').value || todayStr().slice(0,7);
-  const {days,y,m}=monthData(ym);
-  const wb=new ExcelJS.Workbook();
-  wb.creator='DSED/DPEM'; 
+  const ym=$('#monthPick').value||todayStr().slice(0,7);
+  const{grid,days}=monthData(ym);
+  const wb=new ExcelJS.Workbook();wb.creator='DSED/DPEM';
   const ws=wb.addWorksheet('Afectación '+ym,{views:[{state:'frozen',xSplit:1,ySplit:1}]});
-  // header
   const cols=[{header:'DEPENDENCIA',width:42}];
-  for(let d=1;d<=days;d++) cols.push({header:String(d),width:4.5});
-  cols.push({header:'TOTAL',width:8});
-  ws.columns=cols;
-  const {grid}=monthData(ym);
-  // header style
-  ws.getRow(1).eachCell(c=>{ c.font={bold:true,color:{argb:'FFFFFFFF'},name:'Arial',size:9}; c.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FF1B2738'}}; c.alignment={horizontal:'center',vertical:'middle'}; c.border=thin(); });
+  for(let d=1;d<=days;d++)cols.push({header:String(d),width:4.5});
+  cols.push({header:'TOTAL',width:8});ws.columns=cols;
+  function thin(){const s={style:'thin',color:{argb:'FFBFC9D6'}};return{top:s,left:s,right:s,bottom:s}}
+  ws.getRow(1).eachCell(c=>{c.font={bold:true,color:{argb:'FFFFFFFF'},name:'Arial',size:9};c.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FF1D4ED8'}};c.alignment={horizontal:'center',vertical:'middle'};c.border=thin()});
   ws.getCell('A1').alignment={horizontal:'left',vertical:'middle'};
   const colTot=Array.from({length:days+2},()=>0);
-  DEPS.forEach(dep=>{
-    const rowArr=[dep]; let rt=0;
-    for(let d=1;d<=days;d++){ const c=grid[dep][d]; rowArr.push(c.n||''); rt+=c.n; colTot[d]+=c.n; }
-    rowArr.push(rt); colTot[days+1]+=rt;
+  DEPS.forEach(dep=>{const rowArr=[dep];let rt=0;
+    for(let d=1;d<=days;d++){const c=grid[dep][d];rowArr.push(c.n||'');rt+=c.n;colTot[d]+=c.n}
+    rowArr.push(rt);colTot[days+1]+=rt;
     const row=ws.addRow(rowArr);
-    row.eachCell((c,col)=>{ c.border=thin(); c.font={name:'Arial',size:9}; c.alignment={horizontal:col===1?'left':'center'};
-      if(col>1 && col<days+2 && c.value){ const isMoto=grid[dep][col-1].moto>0; c.fill={type:'pattern',pattern:'solid',fgColor:{argb:isMoto?'FFFDE8C4':'FFDCE9FB'}}; }
-      if(col===days+2){ c.font={bold:true,name:'Arial',size:9}; }
-    });
-  });
+    row.eachCell((c,col)=>{c.border=thin();c.font={name:'Arial',size:9};c.alignment={horizontal:col===1?'left':'center'};
+      if(col>1&&col<days+2&&c.value){const isMoto=grid[dep][col-1].moto>0;c.fill={type:'pattern',pattern:'solid',fgColor:{argb:isMoto?'FFFDE8C4':'FFDCE9FB'}}}
+      if(col===days+2)c.font={bold:true,name:'Arial',size:9}})});
   const totRow=ws.addRow(['TOTAL',...colTot.slice(1,days+1).map(v=>v||''),colTot[days+1]]);
-  totRow.eachCell(c=>{ c.font={bold:true,color:{argb:'FFFFFFFF'},name:'Arial',size:9}; c.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FF1B2738'}}; c.alignment={horizontal:'center'}; c.border=thin(); });
+  totRow.eachCell(c=>{c.font={bold:true,color:{argb:'FFFFFFFF'},name:'Arial',size:9};c.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FF1D4ED8'}};c.alignment={horizontal:'center'};c.border=thin()});
   totRow.getCell(1).alignment={horizontal:'left'};
-  function thin(){ const s={style:'thin',color:{argb:'FFBFC9D6'}}; return {top:s,left:s,right:s,bottom:s}; }
-  // second sheet: detalle
   const ws2=wb.addWorksheet('Detalle');
   ws2.columns=[{header:'FECHA',width:12},{header:'L.P.',width:9},{header:'JERARQUIA',width:18},{header:'APELLIDO',width:20},{header:'NOMBRE',width:22},{header:'DEPENDENCIA',width:40},{header:'SERVICIO',width:42},{header:'ROL',width:11}];
-  ws2.getRow(1).eachCell(c=>{ c.font={bold:true,color:{argb:'FFFFFFFF'}}; c.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FF1B2738'}}; });
-  REGISTROS.filter(r=>r.fecha.startsWith(ym)).sort((a,b)=>a.fecha.localeCompare(b.fecha)||a.servicio.localeCompare(b.servicio)).forEach(r=>{
-    const e=EFF_BY_LP[r.lp]||{};
-    ws2.addRow([fmtDate(r.fecha),r.lp,e.jerarquia||'',e.apellido||'',e.nombre||'',r.dependencia,r.servicio,r.rol]);
-  });
-  const buf=await wb.xlsx.writeBuffer();
-  const blob=new Blob([buf],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
-  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=`Afectacion_DSED_DPEM_${ym}.xlsx`; a.click();
+  ws2.getRow(1).eachCell(c=>{c.font={bold:true,color:{argb:'FFFFFFFF'}};c.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FF1D4ED8'}}});
+  REGISTROS.filter(r=>r.fecha.startsWith(ym)).sort((a,b)=>a.fecha.localeCompare(b.fecha)||a.servicio.localeCompare(b.servicio)).forEach(r=>{const e=EFF_BY_LP[r.lp]||{};ws2.addRow([fmtDate(r.fecha),r.lp,e.jerarquia||'',e.apellido||'',e.nombre||'',r.dependencia,r.servicio,r.rol])});
+  const buf=await wb.xlsx.writeBuffer(),blob=new Blob([buf],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`Afectacion_DSED_DPEM_${ym}.xlsx`;a.click();
 }
 
-/* ===================== SERVICIOS ===================== */
+/* SERVICIOS */
 function renderSvcManage(){
   const cont=$('#svcManage');
-  cont.innerHTML=SERVICIOS.map(s=>`
-    <div class="svc-card ${s.requiereMoto?'moto':''}">
-      <span class="snm">${esc(s.nombre)}</span>
-      <span class="meta">${s.requiereMoto?`infantería + ${s.motoMin||2}–${s.motoMax||4} motos`:'sólo infantería'}</span>
-      <div class="acts">
-        <button class="btn ghost sm" data-toggle="${s.id}">${s.requiereMoto?'Quitar motos':'Marcar motos'}</button>
-        <button class="btn danger sm" data-delsvc="${s.id}">Eliminar</button>
-      </div>
-    </div>`).join('');
-  cont.querySelectorAll('[data-toggle]').forEach(b=>b.onclick=async()=>{
-    const s=SERVICIOS.find(x=>x.id===b.dataset.toggle);
-    await setDoc(doc(db,C_SVC,s.id),{...s,requiereMoto:!s.requiereMoto,motoMin:s.motoMin||2,motoMax:s.motoMax||4},{merge:true});
-  });
-  cont.querySelectorAll('[data-delsvc]').forEach(b=>b.onclick=async()=>{
-    const s=SERVICIOS.find(x=>x.id===b.dataset.delsvc);
-    const used=REGISTROS.some(r=>r.servicio===s.nombre);
-    if(used){ if(!confirm(`"${s.nombre}" tiene afectaciones cargadas. ¿Eliminar igual del catálogo? (los registros no se borran)`)) return; }
-    await deleteDoc(doc(db,C_SVC,s.id));
-  });
-}
-
-/* ===================== render orchestration ===================== */
-function renderAll(){
-  renderBoardAndSug();
-  renderAdded();
-  updateMotoCounter();
-  if($('#view-mensual').classList.contains('active')) renderMonth();
-}
-
-/* ===================== events ===================== */
-function bindEvents(){
-  // tabs
-  document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{
-    document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
-    document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));
-    t.classList.add('active'); $('#view-'+t.dataset.view).classList.add('active');
-    if(t.dataset.view==='mensual') renderMonth();
-  });
-  // board date
-  $('#boardDate').value=state.boardDate;
-  $('#boardDate').onchange=e=>{ state.boardDate=e.target.value; renderBoardAndSug(); };
-  $('#dayPrev').onclick=()=>shiftDay(-1); $('#dayNext').onclick=()=>shiftDay(1);
-  $('#dayToday').onclick=()=>{ state.boardDate=todayStr(); renderBoardAndSug(); };
-  $('#sugService').onchange=renderSuggester;
-  // cargar
-  $('#cargarDate').value=state.cargarDate;
-  $('#cargarDate').onchange=e=>{ state.cargarDate=e.target.value; renderAdded(); updateMotoCounter(); doSearch($('#effSearch').value); };
-  $('#cargarService').onchange=()=>{ updateRolField(); doSearch($('#effSearch').value); };
-  $('#rolInf').onclick=()=>setRol('INFANTERIA');
-  $('#rolMoto').onclick=()=>setRol('MOTO');
-  const si=$('#effSearch');
-  si.oninput=()=>doSearch(si.value);
-  si.onkeydown=e=>{
-    const items=$('#effResults').querySelectorAll('.res-item[data-i]');
-    if(e.key==='ArrowDown'){ e.preventDefault(); searchHL=Math.min(searchHL+1,items.length-1); hlUpdate(items); }
-    else if(e.key==='ArrowUp'){ e.preventDefault(); searchHL=Math.max(searchHL-1,0); hlUpdate(items); }
-    else if(e.key==='Enter'){ e.preventDefault(); if(searchHL>=0&&searchResults[searchHL]) pickEff(searchResults[searchHL]); else if(searchResults[0]) pickEff(searchResults[0]); }
-    else if(e.key==='Escape'){ $('#effResults').style.display='none'; }
-  };
-  document.addEventListener('click',e=>{ if(!e.target.closest('.search-box')) $('#effResults').style.display='none'; });
-  // mensual
-  $('#monthPick').value=todayStr().slice(0,7);
-  $('#monthPick').onchange=renderMonth;
-  $('#exportBtn').onclick=()=>exportExcel().catch(err=>{console.error(err);alert('Error exportando');});
-  // servicios add
-  $('#addSvcBtn').onclick=async()=>{
-    const nm=$('#newSvcName').value.trim().toUpperCase();
-    if(!nm) return;
-    if(SERVICIOS.some(s=>s.nombre===nm)){ alert('Ya existe ese servicio.'); return; }
-    const moto=$('#newSvcMoto').checked;
-    await addDoc(collection(db,C_SVC),{nombre:nm,requiereMoto:moto,motoMin:2,motoMax:4,orden:(SERVICIOS.length?Math.max(...SERVICIOS.map(s=>s.orden||0)):0)+1});
-    $('#newSvcName').value=''; $('#newSvcMoto').checked=false;
-  };
-}
-function hlUpdate(items){ items.forEach((el,i)=>el.classList.toggle('hl',i===searchHL)); if(items[searchHL]) items[searchHL].scrollIntoView({block:'nearest'}); }
-function shiftDay(n){ const d=new Date(state.boardDate+'T12:00'); d.setDate(d.getDate()+n); state.boardDate=d.toISOString().slice(0,10); renderBoardAndSug(); }
-
-/* ===================== boot ===================== */
-(async function boot(){
-  bindEvents();
-  setRol('INFANTERIA');
-  try{
-    $('#loadingTxt').textContent='Sincronizando datos…';
-    await ensureSeed();
-    listen();
-    setTimeout(()=>{ $('#loadingScreen').style.display='none'; },600);
-  }catch(err){
-    console.error(err); setConn('err');
-    $('#loadingTxt').textContent='Error de conexión';
-    setTimeout(()=>{ $('#loadingScreen').style.display='none'; },1200);
+  cont.innerHTML=SERVICIOS.map(s=>`<div class="svc-card ${s.requiereMoto?'moto':''}"><span class="snm">${esc(s.nombre)}</span><span class="meta">${s.requiereMoto?`infantería + ${s.motoMin||2}–${s.motoMax||4} motos`:'sólo infantería'}</span><div class="acts"><button class="btn ghost sm" data-toggle="${s.id}">${s.requiereMoto?'Quitar motos':'Marcar motos'}</button><button class="btn danger sm" data-delsvc="${s.id}">Eliminar</button></div></div>`).join('');
+  cont.querySelectorAll('[data-toggle]').forEach(b=>b.onclick=async()=>{const s=SERVICIOS.find(x=>x.id===b.dataset.toggle);await setDoc(doc(db,C_SVC,s.id),{...s,requiereMoto:!s.requiereMoto,motoMin:s.motoMin||2,motoMax:s.motoMax||4},{merge:true})});
+  cont.querySelectorAll('[data-delsvc]').forEach(b=>b.onclick=async()=>{const s=SERVICIOS.find(x=>x.id===b.dataset.delsvc);if(REGISTROS.some(r=>r.servicio===s.nombre)&&!confirm(`"${s.nombre}" tiene afectaciones cargadas. ¿Eliminar igual del catálogo? (los registros no se borran)`))return;await deleteDoc(doc(db,C_SVC,s.id))});
+  const md=$('#motoDeps');
+  if(md){
+    const deps=DEPS.filter(depHasMoto);
+    md.innerHTML=deps.length?deps.map(d=>{const n=EFECTIVOS.filter(e=>e.dependencia===d&&e.moto).length;return `<div class="svc-card moto"><span class="chip moto">🏍 ${n}</span><span class="snm" style="font-size:12.5px">${esc(depShort(d))}</span></div>`}).join(''):'<p class="muted" style="font-size:12px">Ninguna división tiene efectivos con moto cargados.</p>';
   }
+}
+
+/* ===== TOAST ===== */
+let toastT;
+function showToast(msg){const t=$('#toast');t.textContent=msg;t.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('show'),2600)}
+
+/* ===== EFECTIVOS (plantel) ===== */
+function refreshDatalists(){
+  const jers=[...new Set(EFECTIVOS.map(e=>e.jerarquia).filter(Boolean))].sort();
+  const dep=$('#depList'), jer=$('#jerList');
+  if(dep) dep.innerHTML=DEPS.map(d=>`<option value="${esc(d)}">`).join('');
+  if(jer) jer.innerHTML=jers.map(j=>`<option value="${esc(j)}">`).join('');
+}
+function renderRoster(){
+  const cont=$('#rosList'); if(!cont) return;
+  const q=($('#rosSearch')?.value||'').trim().toLowerCase();
+  let list=EFECTIVOS;
+  if(q) list=list.filter(e=>String(e.lp).includes(q)||e.apellido.toLowerCase().includes(q)||e.nombre.toLowerCase().includes(q)||e.dependencia.toLowerCase().includes(q));
+  $('#rosCount').textContent=`${list.length} de ${EFECTIVOS.length} efectivos`;
+  const byDep={}; list.forEach(e=>{(byDep[e.dependencia]=byDep[e.dependencia]||[]).push(e)});
+  const deps=Object.keys(byDep).sort((a,b)=>a.localeCompare(b,'es'));
+  if(deps.length===0){cont.innerHTML='<div class="empty" style="padding:40px">Sin resultados.</div>';return}
+  cont.innerHTML=deps.map(dep=>{
+    const arr=byDep[dep].slice().sort((a,b)=>a.apellido.localeCompare(b.apellido,'es'));
+    const motos=arr.filter(e=>e.moto).length;
+    return `<div class="ros-dep">
+      <div class="ros-dephead"><span class="nm">${esc(dep)}</span><span class="ct">${arr.length}</span>${motos?`<span class="moto-tag">🏍 ${motos} con moto</span>`:''}</div>
+      <div class="ros-grid">${arr.map(e=>`<div class="ros-row">
+        <span class="lp">${e.lp}</span>
+        <span class="info"><span class="nm">${esc(fullName(e))}${e.moto?' <span class="r-moto">🏍</span>':''}</span><span class="sub">${esc(e.jerarquia)}${e.contacto?' · '+esc(e.contacto):''}</span></span>
+        <span class="acts">
+          <button class="icon-btn" data-edit="${e.lp}" title="Editar"><svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 000-1.41l-2.34-2.34a1 1 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg></button>
+          <button class="icon-btn del" data-deleff="${e.lp}" title="Eliminar"><svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg></button>
+        </span></div>`).join('')}</div>
+    </div>`;
+  }).join('');
+  cont.querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>openEffModal(+b.dataset.edit));
+  cont.querySelectorAll('[data-deleff]').forEach(b=>b.onclick=()=>deleteEff(+b.dataset.deleff));
+}
+function openEffModal(lp){
+  state.editingLP=lp||null;
+  const e=lp?EFF_BY_LP[lp]:null;
+  $('#effModalTitle').textContent=lp?'Editar efectivo':'Nuevo efectivo';
+  $('#m_lp').value=e?e.lp:''; $('#m_lp').disabled=!!lp;
+  $('#m_jer').value=e?e.jerarquia:''; $('#m_ape').value=e?e.apellido:''; $('#m_nom').value=e?e.nombre:'';
+  $('#m_dep').value=e?e.dependencia:''; $('#m_cont').value=e?(e.contacto||''):''; $('#m_moto').checked=e?!!e.moto:false;
+  $('#m_err').textContent='';
+  refreshDatalists();
+  $('#effModal').classList.add('show');
+  setTimeout(()=>{(lp?$('#m_jer'):$('#m_lp')).focus()},50);
+}
+function closeEffModal(){$('#effModal').classList.remove('show');state.editingLP=null}
+async function saveEff(){
+  const err=$('#m_err'); err.textContent='';
+  const lpRaw=$('#m_lp').value.trim();
+  const lp=state.editingLP||parseInt(lpRaw,10);
+  const ape=$('#m_ape').value.trim().toUpperCase();
+  const nom=$('#m_nom').value.trim().toUpperCase();
+  const dep=$('#m_dep').value.trim().toUpperCase();
+  const jer=$('#m_jer').value.trim().toUpperCase();
+  if(!state.editingLP){
+    if(!lpRaw||isNaN(lp)){err.textContent='Ingresá un legajo válido.';return}
+    if(EFF_BY_LP[lp]){err.textContent='Ya existe un efectivo con ese legajo.';return}
+  }
+  if(!ape||!nom){err.textContent='Apellido y nombre son obligatorios.';return}
+  if(!dep){err.textContent='La dependencia es obligatoria.';return}
+  const data={lp,jerarquia:jer,apellido:ape,nombre:nom,dependencia:dep,contacto:$('#m_cont').value.trim(),moto:$('#m_moto').checked};
+  try{ await setDoc(doc(db,C_EFF,String(lp)),data); closeEffModal(); showToast(state.editingLP?'Efectivo actualizado':'Efectivo agregado'); }
+  catch(e){console.error(e);err.textContent='No se pudo guardar. Revisá la conexión.'}
+}
+async function deleteEff(lp){
+  const e=EFF_BY_LP[lp]; if(!e) return;
+  const tieneReg=REGISTROS.some(r=>r.lp===lp);
+  const msg=`¿Eliminar a ${fullName(e)} (LP ${lp}) de la nómina?`+(tieneReg?'\n\nTiene afectaciones en el historial: esos registros NO se borran, pero quedarán sin datos de nombre.':'');
+  if(!confirm(msg)) return;
+  try{ await deleteDoc(doc(db,C_EFF,String(lp))); showToast('Efectivo eliminado'); }
+  catch(err){console.error(err);showToast('No se pudo eliminar')}
+}
+function onDepInput(){const dep=$('#m_dep').value.trim().toUpperCase();if(!state.editingLP && (MOTO_DEPS.includes(dep)||depHasMoto(dep))) $('#m_moto').checked=true}
+
+/* ===== RESUMEN WHATSAPP ===== */
+function buildWhatsApp(){
+  const date=state.boardDate, regs=regsOn(date);
+  const byS={}; regs.forEach(r=>{(byS[r.servicio]=byS[r.servicio]||[]).push(r)});
+  const order=SERVICIOS.map(s=>s.nombre).concat(Object.keys(byS).filter(n=>!svcByName(n)));
+  const services=order.filter(n=>byS[n]);
+  let txt=`*AFECTACIÓN DE SERVICIOS*\n📅 ${fmtDate(date)}  ·  DSED/DPEM\n`;
+  if(services.length===0){ txt+=`\n_Sin afectaciones cargadas._`; return txt; }
+  let motos=0;
+  services.forEach(svc=>{
+    const list=byS[svc].slice().sort((a,b)=>a.dependencia.localeCompare(b.dependencia)||a.lp-b.lp);
+    const mh=list.filter(r=>r.rol==='MOTO').length; motos+=mh;
+    txt+=`\n*${svc}* (${list.length}${mh?` · ${mh}🏍`:''})\n`;
+    list.forEach(r=>{const e=EFF_BY_LP[r.lp]||{apellido:'?',nombre:''};
+      txt+=`${r.rol==='MOTO'?'🏍':'•'} ${e.apellido}, ${e.nombre} — LP ${r.lp}\n`;});
+  });
+  const disp=EFECTIVOS.length-affectedLPsOn(date).size;
+  txt+=`\n———————————\nAfectados: ${regs.length} · Motos: ${motos} · Disponibles: ${disp}`;
+  return txt;
+}
+async function copyWhatsApp(){
+  const txt=buildWhatsApp();
+  try{ await navigator.clipboard.writeText(txt); showToast('📋 Resumen copiado al portapapeles'); }
+  catch(e){
+    const ta=document.createElement('textarea');ta.value=txt;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();
+    try{document.execCommand('copy');showToast('📋 Resumen copiado');}catch(_){showToast('No se pudo copiar');}
+    document.body.removeChild(ta);
+  }
+}
+
+/* ===== VISTA SEMANAL ===== */
+const DAY_NAMES=['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'];
+function renderWeek(){
+  const start=state.weekStart;
+  const days=Array.from({length:7},(_,i)=>addDays(start,i));
+  const end=days[6];
+  const fmtShort=s=>{const p=s.split('-');return `${p[2]}/${p[1]}`};
+  $('#weekTitle').textContent=`Semana ${fmtShort(start)} – ${fmtShort(end)}`;
+  const grid={}; DEPS.forEach(dep=>grid[dep]=days.map(()=>({n:0,moto:0})));
+  REGISTROS.forEach(r=>{const i=days.indexOf(r.fecha);if(i<0)return;if(!grid[r.dependencia])return;grid[r.dependencia][i].n++;if(r.rol==='MOTO')grid[r.dependencia][i].moto++});
+  const today=todayStr();
+  let head='<tr><th class="dep-cell">Dependencia</th>';
+  days.forEach((d,i)=>{const wd=i>=5;head+=`<th class="day-h ${d===today?'today':''} ${wd?'wknd':''}" data-day="${d}"><span class="dn">${DAY_NAMES[i]}</span><span class="dd">${fmtShort(d)}</span></th>`});
+  head+='<th>Σ</th></tr>';
+  let body=''; const colTot=days.map(()=>0); let gTot=0;
+  DEPS.forEach(dep=>{
+    let row=`<tr><td class="dep-cell">${esc(dep)}</td>`,rt=0;
+    days.forEach((d,i)=>{const c=grid[dep][i],wd=i>=5;
+      if(c.n>0){row+=`<td class="${wd?'wknd':''}"><span class="cv ${c.moto>0?'moto':'has'}">${c.n}${c.moto>0?'·'+c.moto+'🏍':''}</span></td>`;rt+=c.n;colTot[i]+=c.n}
+      else row+=`<td class="${wd?'wknd':''}"></td>`});
+    row+=`<td><b>${rt}</b></td></tr>`;gTot+=rt;body+=row});
+  let tot='<tr class="tot"><td class="tot-cell">TOTAL</td>';
+  colTot.forEach(v=>tot+=`<td>${v||''}</td>`); tot+=`<td>${gTot}</td></tr>`;
+  $('#weekTable').innerHTML=`<table class="grid"><thead>${head}</thead><tbody>${body}${tot}</tbody></table>`;
+  $('#weekTotal').textContent=`${gTot} afectaciones en la semana`;
+  $('#weekTable').querySelectorAll('.day-h').forEach(h=>h.onclick=()=>{
+    state.boardDate=h.dataset.day; state.openDep=null;
+    document.querySelector('.tab[data-view="tablero"]').click();
+    renderBoardAndSug();
+  });
+}
+
+function renderAll(){renderBoardAndSug();renderAdded();updateMotoCounter();if($('#view-mensual').classList.contains('active'))renderMonth();if($('#view-semanal').classList.contains('active'))renderWeek();if($('#view-efectivos').classList.contains('active'))renderRoster()}
+
+function bindEvents(){
+  document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));t.classList.add('active');$('#view-'+t.dataset.view).classList.add('active');const v=t.dataset.view;if(v==='mensual')renderMonth();if(v==='semanal')renderWeek();if(v==='efectivos'){refreshDatalists();renderRoster()}});
+  $('#boardDate').value=state.boardDate;
+  $('#boardDate').onchange=e=>{state.boardDate=e.target.value;state.openDep=null;renderBoardAndSug()};
+  $('#dayPrev').onclick=()=>shiftDay(-1);$('#dayNext').onclick=()=>shiftDay(1);
+  $('#dayToday').onclick=()=>{state.boardDate=todayStr();state.openDep=null;renderBoardAndSug()};
+  $('#sugService').onchange=()=>{state.openDep=null;renderSuggester()};
+  $('#cargarDate').value=state.cargarDate;
+  $('#cargarDate').onchange=e=>{state.cargarDate=e.target.value;renderAdded();updateMotoCounter();doSearch($('#effSearch').value)};
+  $('#cargarService').onchange=()=>{updateRolField();doSearch($('#effSearch').value)};
+  $('#rolInf').onclick=()=>setRol('INFANTERIA');$('#rolMoto').onclick=()=>setRol('MOTO');
+  const si=$('#effSearch');si.oninput=()=>doSearch(si.value);
+  si.onkeydown=e=>{const items=$('#effResults').querySelectorAll('.res-item[data-i]');
+    if(e.key==='ArrowDown'){e.preventDefault();searchHL=Math.min(searchHL+1,items.length-1);hlUpdate(items)}
+    else if(e.key==='ArrowUp'){e.preventDefault();searchHL=Math.max(searchHL-1,0);hlUpdate(items)}
+    else if(e.key==='Enter'){e.preventDefault();if(searchHL>=0&&searchResults[searchHL])pickEff(searchResults[searchHL]);else if(searchResults[0])pickEff(searchResults[0])}
+    else if(e.key==='Escape')$('#effResults').style.display='none'};
+  document.addEventListener('click',e=>{if(!e.target.closest('.search-box'))$('#effResults').style.display='none'});
+  $('#monthPick').value=todayStr().slice(0,7);$('#monthPick').onchange=renderMonth;
+  $('#exportBtn').onclick=()=>exportExcel().catch(err=>{console.error(err);alert('Error exportando')});
+  $('#addSvcBtn').onclick=async()=>{const nm=$('#newSvcName').value.trim().toUpperCase();if(!nm)return;if(SERVICIOS.some(s=>s.nombre===nm)){alert('Ya existe ese servicio.');return}const moto=$('#newSvcMoto').checked;await addDoc(collection(db,C_SVC),{nombre:nm,requiereMoto:moto,motoMin:2,motoMax:4,orden:(SERVICIOS.length?Math.max(...SERVICIOS.map(s=>s.orden||0)):0)+1});$('#newSvcName').value='';$('#newSvcMoto').checked=false};
+  // Resumen WhatsApp
+  $('#waBtn').onclick=copyWhatsApp;
+  // Semanal
+  $('#weekPrev').onclick=()=>{state.weekStart=addDays(state.weekStart,-7);renderWeek()};
+  $('#weekNext').onclick=()=>{state.weekStart=addDays(state.weekStart,7);renderWeek()};
+  $('#weekThis').onclick=()=>{state.weekStart=weekStartOf(todayStr());renderWeek()};
+  // Plantel
+  $('#rosSearch').oninput=renderRoster;
+  $('#rosAddBtn').onclick=()=>openEffModal(null);
+  // Modal efectivo
+  $('#m_save').onclick=saveEff;
+  $('#m_cancel').onclick=closeEffModal;
+  $('#m_dep').oninput=onDepInput;
+  $('#effModal').onclick=e=>{if(e.target.id==='effModal')closeEffModal()};
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('#effModal').classList.contains('show'))closeEffModal()});
+}
+function hlUpdate(items){items.forEach((el,i)=>el.classList.toggle('hl',i===searchHL));if(items[searchHL])items[searchHL].scrollIntoView({block:'nearest'})}
+function shiftDay(n){const d=new Date(state.boardDate+'T12:00');d.setDate(d.getDate()+n);state.boardDate=d.toISOString().slice(0,10);state.openDep=null;renderBoardAndSug()}
+
+(async function boot(){
+  bindEvents();setRol('INFANTERIA');
+  try{$('#loadingTxt').textContent='Sincronizando datos…';await ensureSeed();listen();setTimeout(()=>$('#loadingScreen').style.display='none',600)}
+  catch(err){console.error(err);setConn('err');$('#loadingTxt').textContent='Error de conexión';setTimeout(()=>$('#loadingScreen').style.display='none',1200)}
 })();
 </script>
 </body>
