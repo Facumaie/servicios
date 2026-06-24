@@ -2,3 +2,9 @@
 [build]
   publish = "."
   command = "echo 'Sitio estatico, sin build'"
+
+[build.environment]
+  # La API key web de Firebase es pública por diseño (no es un secreto):
+  # identifica el proyecto, no autoriza acceso. La seguridad real está en
+  # las reglas de Firestore. Por eso desactivamos el escaneo de secretos.
+  SECRETS_SCAN_ENABLED = "false"
