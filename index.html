@@ -470,7 +470,7 @@ function addDays(s,n){const d=new Date(s+'T12:00');d.setDate(d.getDate()+n);retu
 function weekStartOf(s){const d=new Date(s+'T12:00');const wd=(d.getDay()+6)%7;d.setDate(d.getDate()-wd);return d.toISOString().slice(0,10)} // lunes
 function fmtDate(s){const[y,m,d]=s.split('-');return `${d}/${m}/${y}`}
 function esc(s){return(s==null?'':String(s)).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
-function depShort(d){return d.replace(/^DIVISION /,'Div. ').replace(/^DEPARTAMENTO /,'Depto. ').replace(/ACOMPAÑAMIENTO/,'Acompañam.')}
+function depShort(d){return d.replace(/^DIVISION /,'Div. ').replace(/^DEPARTAMENTO /,'Depto. ').replace(/ACOMPAÑAMIENTOS?/,'Acompañam.')}
 function svcByName(n){return SERVICIOS.find(s=>s.nombre===n)}
 function svcMoto(n){const s=svcByName(n);return !!(s&&s.requiereMoto)}
 function fullName(e){return `${e.apellido}, ${e.nombre}`}
