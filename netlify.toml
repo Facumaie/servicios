@@ -1,0 +1,4 @@
+# Servicios DSED/DPEM — sitio estático, sin build
+[build]
+  publish = "."
+  command = "echo 'Sitio estatico, sin build'"
