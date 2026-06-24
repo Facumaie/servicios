@@ -834,8 +834,10 @@ function buildWhatsApp(){
     const list=byS[svc].slice().sort((a,b)=>a.dependencia.localeCompare(b.dependencia)||a.lp-b.lp);
     const mh=list.filter(r=>r.rol==='MOTO').length; motos+=mh;
     txt+=`\n*${svc}* (${list.length}${mh?` · ${mh}🏍`:''})\n`;
-    list.forEach(r=>{const e=EFF_BY_LP[r.lp]||{apellido:'?',nombre:''};
-      txt+=`${r.rol==='MOTO'?'🏍':'•'} ${e.apellido}, ${e.nombre} — LP ${r.lp}\n`;});
+    list.forEach(r=>{const e=EFF_BY_LP[r.lp]||{apellido:'?',nombre:'',jerarquia:'',contacto:''};
+      const jer=e.jerarquia?`${e.jerarquia} `:'';
+      const tel=e.contacto?` · 📱 ${e.contacto}`:'';
+      txt+=`${r.rol==='MOTO'?'🏍':'•'} ${jer}${e.apellido}, ${e.nombre} — LP ${r.lp}${tel}\n`;});
   });
   const disp=EFECTIVOS.length-affectedLPsOn(date).size;
   txt+=`\n———————————\nAfectados: ${regs.length} · Motos: ${motos} · Disponibles: ${disp}`;
