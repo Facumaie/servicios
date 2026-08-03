@@ -71,6 +71,7 @@ input.f:focus,select.f:focus{border-color:var(--accent);background:#fff;box-shad
 .chip{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:700;letter-spacing:.3px}
 .chip.moto{background:var(--moto-soft);color:var(--moto-d);border:1px solid #f5d39a}
 .chip.inf{background:var(--accent-soft);color:var(--accent-d);border:1px solid #c9dcfb}
+.chip.hora{background:var(--panel3);color:var(--ink2);border:1px solid var(--line2);font-family:'JetBrains Mono',monospace;font-weight:700;letter-spacing:.2px}
 .mono{font-family:'JetBrains Mono',monospace}
 .muted{color:var(--muted)}
 
@@ -185,7 +186,10 @@ table.grid td.tot-cell{text-align:right;font-weight:700;background:#fff;position
 
 /* Servicios */
 .svc-manage{display:flex;flex-direction:column;gap:9px}
-.svc-card{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:13px}
+.svc-card{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:13px;flex-wrap:wrap}
+.svc-hora-edit{width:100%;display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap;margin-top:4px;padding-top:12px;border-top:1px dashed var(--line2)}
+.svc-hora-edit .lbl{margin-bottom:4px}
+.svc-hora-edit input.f{width:92px;padding:8px 10px}
 .svc-card.moto{border-left:3px solid var(--moto)}
 .svc-card .snm{font-family:'Barlow Condensed';font-weight:600;font-size:14.5px;letter-spacing:.3px;text-transform:uppercase;color:var(--ink)}
 .svc-card .meta{font-size:11px;color:var(--muted)}
@@ -377,11 +381,14 @@ table.grid th.day-h.today .dd{color:#cfe0ff}
         <div class="svc-manage" id="svcManage"></div>
         <div class="add-svc">
           <label class="lbl">Agregar servicio</label>
-          <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end">
             <input type="text" class="f" id="newSvcName" placeholder="Nombre del servicio" style="flex:1;min-width:200px">
-            <label style="display:flex;align-items:center;gap:7px;font-size:12px;color:var(--ink2);white-space:nowrap"><input type="checkbox" id="newSvcMoto"> Requiere motos</label>
-            <button class="btn sm" id="addSvcBtn">Agregar</button>
+            <div><label class="lbl" style="margin-bottom:4px">Desde</label><input type="text" class="f" id="newSvcHi" placeholder="06:00" style="width:92px"></div>
+            <div><label class="lbl" style="margin-bottom:4px">Hasta</label><input type="text" class="f" id="newSvcHf" placeholder="11:00" style="width:92px"></div>
+            <label style="display:flex;align-items:center;gap:7px;font-size:12px;color:var(--ink2);white-space:nowrap;padding-bottom:9px"><input type="checkbox" id="newSvcMoto"> Requiere motos</label>
+            <button class="btn sm" id="addSvcBtn" style="align-self:flex-end">Agregar</button>
           </div>
+          <p class="muted" style="font-size:11px;margin-top:8px">El horario es opcional. Podés dejarlo vacío y cargarlo después desde cada tarjeta.</p>
         </div>
       </div>
       <div class="panel" style="width:340px">
@@ -453,17 +460,23 @@ rebuildRoster(SEED.efectivos); // arranque inmediato; Firestore lo reemplaza al 
 const MOTO_DEPS=["DIVISION ACOMPAÑAMIENTOS ESPECIALES","DIVISION GRUPO DE ACOMPAÑAMIENTO DEPORTIVOS"];
 function depHasMoto(dep){ return EFECTIVOS.some(e=>e.dependencia===dep && e.moto); }
 const DEFAULT_SVCS=[
-  {nombre:"SATURACIÓN POR CUADRANTES - COMUNA 1",requiereMoto:false,orden:1},
+  {nombre:"SATURACIÓN POR CUADRANTES - COMUNA 1",requiereMoto:false,orden:1,horaInicio:"19:00",horaFin:"24:00"},
   {nombre:"SATURACIÓN POR CUADRANTES",requiereMoto:false,orden:2},
   {nombre:"SATURACIÓN EN SUBTE",requiereMoto:false,orden:3},
   {nombre:"SATURACIÓN COOPERACION SPB - OPERACION MURO",requiereMoto:false,orden:4},
-  {nombre:"PREVENCIÓN USO INDEBIDO DEL ESPACIO PÚBLICO",requiereMoto:false,orden:5},
+  {nombre:"PREVENCIÓN USO INDEBIDO DEL ESPACIO PÚBLICO",requiereMoto:false,orden:5,horaInicio:"06:00",horaFin:"11:00"},
   {nombre:"FAN FEST - MUNDIAL DE FÚTBOL 2026",requiereMoto:false,orden:6},
-  {nombre:"MOVISTAR ARENA",requiereMoto:true,motoMin:2,motoMax:4,orden:7},
+  {nombre:"MOVISTAR ARENA",requiereMoto:true,motoMin:2,motoMax:4,orden:7,horaInicio:"18:00",horaFin:"22:00"},
 ];
+/* Horarios conocidos para backfill de servicios ya cargados en Firestore */
+const KNOWN_HORARIOS={
+  "PREVENCIÓN USO INDEBIDO DEL ESPACIO PÚBLICO":{horaInicio:"06:00",horaFin:"11:00"},
+  "SATURACIÓN POR CUADRANTES - COMUNA 1":{horaInicio:"19:00",horaFin:"24:00"},
+  "MOVISTAR ARENA":{horaInicio:"18:00",horaFin:"22:00"},
+};
 
 let REGISTROS=[], SERVICIOS=[];
-let state={boardDate:todayStr(),cargarDate:todayStr(),cargarRol:"INFANTERIA",openDep:null,weekStart:weekStartOf(todayStr()),editingLP:null};
+let state={boardDate:todayStr(),cargarDate:todayStr(),cargarRol:"INFANTERIA",openDep:null,weekStart:weekStartOf(todayStr()),editingLP:null,editSvcId:null};
 
 function todayStr(){return new Date().toISOString().slice(0,10)}
 function addDays(s,n){const d=new Date(s+'T12:00');d.setDate(d.getDate()+n);return d.toISOString().slice(0,10)}
@@ -473,6 +486,20 @@ function esc(s){return(s==null?'':String(s)).replace(/[&<>"]/g,c=>({'&':'&amp;',
 function depShort(d){return d.replace(/^DIVISION /,'Div. ').replace(/^DEPARTAMENTO /,'Depto. ')}
 function svcByName(n){return SERVICIOS.find(s=>s.nombre===n)}
 function svcMoto(n){const s=svcByName(n);return !!(s&&s.requiereMoto)}
+/* Horarios de servicio */
+function normHora(v){
+  if(v==null) return '';
+  let s=String(v).trim().toLowerCase().replace(/hs?\b/,'').replace(/[.\s]/g,':').replace(/[^0-9:]/g,'');
+  if(!s) return '';
+  if(s.includes(':')){let[h,m]=s.split(':');h=(h||'0').padStart(2,'0').slice(-2);m=(m||'00').padStart(2,'0').slice(0,2);return `${h}:${m}`}
+  if(s.length<=2) return s.padStart(2,'0')+':00';
+  s=s.padStart(4,'0'); return `${s.slice(0,2)}:${s.slice(2,4)}`;
+}
+function svcHorarioStr(s){ // s: objeto servicio o nombre
+  const o=typeof s==='string'?svcByName(s):s;
+  if(!o||!o.horaInicio||!o.horaFin) return '';
+  return `${o.horaInicio} a ${o.horaFin} hs`;
+}
 function fullName(e){return `${e.apellido}, ${e.nombre}`}
 const $=s=>document.querySelector(s);
 const connDot=$('#connDot'),connTxt=$('#connTxt');
@@ -492,6 +519,18 @@ async function ensureSeed(){
     const batch=writeBatch(db);
     DEFAULT_SVCS.forEach(s=>{const ref=doc(collection(db,C_SVC));batch.set(ref,{motoMin:2,motoMax:4,...s})});
     await batch.commit();
+  }
+  // Backfill horarios sobre servicios ya cargados (una sola vez)
+  const horMeta=doc(db,C_META,"seed_horarios_v1");
+  if(!(await getDoc(horMeta)).exists()){
+    const snap=svcSnap.empty?await getDocs(collection(db,C_SVC)):svcSnap;
+    const batch=writeBatch(db); let cambios=0;
+    snap.docs.forEach(d=>{
+      const s=d.data(), h=KNOWN_HORARIOS[s.nombre];
+      if(h && (!s.horaInicio||!s.horaFin)){ batch.set(doc(db,C_SVC,d.id),h,{merge:true}); cambios++; }
+    });
+    if(cambios) await batch.commit();
+    await setDoc(horMeta,{done:true,at:Date.now()});
   }
   // efectivos (nómina editable)
   const effMeta=doc(db,C_META,"seed_efectivos");
@@ -548,8 +587,9 @@ function renderBoard(){
   services.forEach(svc=>{
     const list=byS[svc].slice().sort((a,b)=>a.dependencia.localeCompare(b.dependencia)||a.lp-b.lp);
     const hasMoto=svcMoto(svc); const motosHere=list.filter(r=>r.rol==='MOTO').length; motoCount+=motosHere;
+    const hor=svcHorarioStr(svc);
     const block=document.createElement('div'); block.className='svc-block';
-    block.innerHTML=`<div class="svc-head ${hasMoto?'has-moto':''}"><span class="nm">${esc(svc)}</span>${hasMoto?`<span class="chip moto">🏍 ${motosHere} moto${motosHere!==1?'s':''}</span>`:''}<span class="ct">${list.length}</span></div>
+    block.innerHTML=`<div class="svc-head ${hasMoto?'has-moto':''}"><span class="nm">${esc(svc)}</span>${hor?`<span class="chip hora">🕐 ${esc(hor)}</span>`:''}${hasMoto?`<span class="chip moto">🏍 ${motosHere} moto${motosHere!==1?'s':''}</span>`:''}<span class="ct">${list.length}</span></div>
       <div class="eff-list">${list.map(r=>{const e=EFF_BY_LP[r.lp]||{apellido:'?',nombre:'',jerarquia:'',dependencia:r.dependencia};
         return `<div class="eff"><span class="lp">${r.lp}</span>${r.rol==='MOTO'?'<span class="chip moto">🏍</span>':''}<span><span class="nom">${esc(fullName(e))}</span> <span class="jer">· ${esc(e.jerarquia)}</span></span><span class="dep">${esc(depShort(r.dependencia))}</span><button class="x" data-del="${r.id}" title="Quitar">✕</button></div>`}).join('')}</div>`;
     cont.appendChild(block);
@@ -625,7 +665,7 @@ function renderBoardAndSug(){renderBoard();renderSuggester()}
 /* CARGAR */
 let searchHL=-1,searchResults=[];
 function renderServiceSelectors(){
-  const opts=SERVICIOS.map(s=>`<option value="${esc(s.nombre)}">${esc(s.nombre)}</option>`).join('');
+  const opts=SERVICIOS.map(s=>{const h=svcHorarioStr(s);return `<option value="${esc(s.nombre)}">${esc(s.nombre)}${h?`  ·  ${esc(h)}`:''}</option>`}).join('');
   ['#sugService','#cargarService'].forEach(id=>{const el=$(id);const prev=el.value;el.innerHTML=opts;if(prev&&SERVICIOS.some(s=>s.nombre===prev))el.value=prev});
   updateRolField();
 }
@@ -668,8 +708,8 @@ function renderAdded(){
   const regs=REGISTROS.filter(r=>r.fecha===state.cargarDate).sort((a,b)=>(b.ts||0)-(a.ts||0));
   const cont=$('#addedList');
   if(regs.length===0){cont.innerHTML=`<div class="empty" style="padding:30px">Todavía no cargaste a nadie para este día.</div>`;return}
-  cont.innerHTML=regs.map(r=>{const e=EFF_BY_LP[r.lp]||{apellido:'?',nombre:'',jerarquia:''};
-    return `<div class="added-row"><span class="lp mono" style="color:var(--accent);font-weight:700;min-width:54px">${r.lp}</span>${r.rol==='MOTO'?'<span class="chip moto">🏍 Moto</span>':'<span class="chip inf">Inf.</span>'}<span><b style="font-size:13px">${esc(fullName(e))}</b><br><span class="muted" style="font-size:11px">${esc(r.servicio)}</span></span><button class="btn danger sm" data-del="${r.id}" style="margin-left:auto">Quitar</button></div>`}).join('');
+  cont.innerHTML=regs.map(r=>{const e=EFF_BY_LP[r.lp]||{apellido:'?',nombre:'',jerarquia:''};const hor=svcHorarioStr(r.servicio);
+    return `<div class="added-row"><span class="lp mono" style="color:var(--accent);font-weight:700;min-width:54px">${r.lp}</span>${r.rol==='MOTO'?'<span class="chip moto">🏍 Moto</span>':'<span class="chip inf">Inf.</span>'}<span><b style="font-size:13px">${esc(fullName(e))}</b><br><span class="muted" style="font-size:11px">${esc(r.servicio)}${hor?` · 🕐 ${esc(hor)}`:''}</span></span><button class="btn danger sm" data-del="${r.id}" style="margin-left:auto">Quitar</button></div>`}).join('');
   cont.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>delReg(b.dataset.del));
 }
 async function delReg(id){try{await deleteDoc(doc(db,C_REG,id))}catch(err){console.error(err);banner('err','No se pudo eliminar.')}}
@@ -733,7 +773,32 @@ async function exportExcel(){
 /* SERVICIOS */
 function renderSvcManage(){
   const cont=$('#svcManage');
-  cont.innerHTML=SERVICIOS.map(s=>`<div class="svc-card ${s.requiereMoto?'moto':''}"><span class="snm">${esc(s.nombre)}</span><span class="meta">${s.requiereMoto?`infantería + ${s.motoMin||2}–${s.motoMax||4} motos`:'sólo infantería'}</span><div class="acts"><button class="btn ghost sm" data-toggle="${s.id}">${s.requiereMoto?'Quitar motos':'Marcar motos'}</button><button class="btn danger sm" data-delsvc="${s.id}">Eliminar</button></div></div>`).join('');
+  cont.innerHTML=SERVICIOS.map(s=>{
+    const editing=state.editSvcId===s.id, hor=svcHorarioStr(s);
+    const meta=`${s.requiereMoto?`infantería + ${s.motoMin||2}–${s.motoMax||4} motos`:'sólo infantería'}${hor?` · 🕐 ${esc(hor)}`:' · sin horario'}`;
+    const editor=editing?`<div class="svc-hora-edit">
+        <div><label class="lbl">Desde</label><input type="text" class="f" data-hi="${s.id}" value="${esc(s.horaInicio||'')}" placeholder="06:00"></div>
+        <div><label class="lbl">Hasta</label><input type="text" class="f" data-hf="${s.id}" value="${esc(s.horaFin||'')}" placeholder="11:00"></div>
+        <button class="btn sm" data-savehora="${s.id}">Guardar</button>
+        <button class="btn ghost sm" data-cancelhora="${s.id}">Cancelar</button>
+        ${(s.horaInicio||s.horaFin)?`<button class="btn danger sm" data-clearhora="${s.id}">Quitar horario</button>`:''}
+      </div>`:'';
+    return `<div class="svc-card ${s.requiereMoto?'moto':''}${editing?' editing':''}"><span class="snm">${esc(s.nombre)}</span><span class="meta">${meta}</span><div class="acts"><button class="btn ghost sm" data-edithora="${s.id}">🕐 Horario</button><button class="btn ghost sm" data-toggle="${s.id}">${s.requiereMoto?'Quitar motos':'Marcar motos'}</button><button class="btn danger sm" data-delsvc="${s.id}">Eliminar</button></div>${editor}</div>`;
+  }).join('');
+  cont.querySelectorAll('[data-edithora]').forEach(b=>b.onclick=()=>{state.editSvcId=state.editSvcId===b.dataset.edithora?null:b.dataset.edithora;renderSvcManage()});
+  cont.querySelectorAll('[data-cancelhora]').forEach(b=>b.onclick=()=>{state.editSvcId=null;renderSvcManage()});
+  cont.querySelectorAll('[data-savehora]').forEach(b=>b.onclick=async()=>{
+    const id=b.dataset.savehora, s=SERVICIOS.find(x=>x.id===id); if(!s)return;
+    const hi=normHora(cont.querySelector(`[data-hi="${id}"]`).value), hf=normHora(cont.querySelector(`[data-hf="${id}"]`).value);
+    state.editSvcId=null;
+    try{await setDoc(doc(db,C_SVC,id),{horaInicio:hi,horaFin:hf},{merge:true});showToast(hi&&hf?`🕐 Horario guardado: ${hi} a ${hf} hs`:'Horario actualizado')}
+    catch(err){console.error(err);showToast('No se pudo guardar el horario')}
+  });
+  cont.querySelectorAll('[data-clearhora]').forEach(b=>b.onclick=async()=>{
+    const id=b.dataset.clearhora;state.editSvcId=null;
+    try{await setDoc(doc(db,C_SVC,id),{horaInicio:'',horaFin:''},{merge:true});showToast('Horario quitado')}
+    catch(err){console.error(err);showToast('No se pudo actualizar')}
+  });
   cont.querySelectorAll('[data-toggle]').forEach(b=>b.onclick=async()=>{const s=SERVICIOS.find(x=>x.id===b.dataset.toggle);await setDoc(doc(db,C_SVC,s.id),{...s,requiereMoto:!s.requiereMoto,motoMin:s.motoMin||2,motoMax:s.motoMax||4},{merge:true})});
   cont.querySelectorAll('[data-delsvc]').forEach(b=>b.onclick=async()=>{const s=SERVICIOS.find(x=>x.id===b.dataset.delsvc);if(REGISTROS.some(r=>r.servicio===s.nombre)&&!confirm(`"${s.nombre}" tiene afectaciones cargadas. ¿Eliminar igual del catálogo? (los registros no se borran)`))return;await deleteDoc(doc(db,C_SVC,s.id))});
   const md=$('#motoDeps');
@@ -833,7 +898,9 @@ function buildWhatsApp(){
   services.forEach(svc=>{
     const list=byS[svc].slice().sort((a,b)=>a.dependencia.localeCompare(b.dependencia)||a.lp-b.lp);
     const mh=list.filter(r=>r.rol==='MOTO').length; motos+=mh;
+    const hor=svcHorarioStr(svc);
     txt+=`\n*${svc}* (${list.length}${mh?` · ${mh}🏍`:''})\n`;
+    if(hor) txt+=`🕐 ${hor}\n`;
     list.forEach(r=>{const e=EFF_BY_LP[r.lp]||{apellido:'?',nombre:'',jerarquia:'',contacto:''};
       const jer=e.jerarquia?`${e.jerarquia} `:'';
       const tel=e.contacto?` · 📱 ${e.contacto}`:'';
@@ -907,7 +974,7 @@ function bindEvents(){
   document.addEventListener('click',e=>{if(!e.target.closest('.search-box'))$('#effResults').style.display='none'});
   $('#monthPick').value=todayStr().slice(0,7);$('#monthPick').onchange=renderMonth;
   $('#exportBtn').onclick=()=>exportExcel().catch(err=>{console.error(err);alert('Error exportando')});
-  $('#addSvcBtn').onclick=async()=>{const nm=$('#newSvcName').value.trim().toUpperCase();if(!nm)return;if(SERVICIOS.some(s=>s.nombre===nm)){alert('Ya existe ese servicio.');return}const moto=$('#newSvcMoto').checked;await addDoc(collection(db,C_SVC),{nombre:nm,requiereMoto:moto,motoMin:2,motoMax:4,orden:(SERVICIOS.length?Math.max(...SERVICIOS.map(s=>s.orden||0)):0)+1});$('#newSvcName').value='';$('#newSvcMoto').checked=false};
+  $('#addSvcBtn').onclick=async()=>{const nm=$('#newSvcName').value.trim().toUpperCase();if(!nm)return;if(SERVICIOS.some(s=>s.nombre===nm)){alert('Ya existe ese servicio.');return}const moto=$('#newSvcMoto').checked;const hi=normHora($('#newSvcHi').value),hf=normHora($('#newSvcHf').value);await addDoc(collection(db,C_SVC),{nombre:nm,requiereMoto:moto,motoMin:2,motoMax:4,horaInicio:hi,horaFin:hf,orden:(SERVICIOS.length?Math.max(...SERVICIOS.map(s=>s.orden||0)):0)+1});$('#newSvcName').value='';$('#newSvcMoto').checked=false;$('#newSvcHi').value='';$('#newSvcHf').value=''};
   // Resumen WhatsApp
   $('#waBtn').onclick=copyWhatsApp;
   // Semanal
